@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Marco Sport | Configuración</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f2f2f2;
+
+        }
+
+        .contenedor {
+
+            width: 90%;
+
+            max-width: 500px;
+
+            margin: 40px auto;
+
+        }
+
+        .caja {
+
+            background: white;
+
+            padding: 30px;
+
+            margin-bottom: 25px;
+
+            border-radius: 15px;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+        }
+
+        h1,
+        h2 {
+
+            text-align: center;
+
+        }
+
+        label {
+
+            display: block;
+
+            margin-top: 15px;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+        }
+
+        button {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #009944;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+        .error {
+
+            background: #ffe5e5;
+
+            color: #c00000;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            margin-bottom: 15px;
+
+        }
+
+        .mensaje {
+
+            background: #e3f8e9;
+
+            color: #08752f;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            margin-bottom: 15px;
+
+        }
+
+        .volver {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #009944;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <div class="caja">
+
+        <h1>⚙️ Configuración</h1>
+
+        {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+        {% if mensaje %}
+
+        <div class="mensaje">
+            {{ mensaje }}
+        </div>
+
+        {% endif %}
+
+        <h2>👤 Datos del administrador</h2>
+
+        <form method="POST">
+
+            <label>
+                Nombre
+            </label>
+
+            <input
+                type="text"
+                name="nombre"
+                value="{{ admin['nombre'] }}"
+                required
+            >
+
+            <label>
+                Número de celular
+            </label>
+
+            <input
+                type="tel"
+                name="telefono"
+                value="{{ admin['telefono'] }}"
+                required
+            >
+
+            <label>
+                Usuario
+            </label>
+
+            <input
+                type="text"
+                name="usuario"
+                value="{{ admin['usuario'] }}"
+                required
+            >
+
+            <button type="submit">
+                💾 Guardar cambios
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="caja">
+
+        <h2>🔐 Cambiar contraseña</h2>
+
+        <form
+            method="POST"
+            action="/cambiar-password"
+        >
+
+            <label>
+                Contraseña actual
+            </label>
+
+            <input
+                type="password"
+                name="password_actual"
+                required
+            >
+
+            <label>
+                Nueva contraseña
+            </label>
+
+            <input
+                type="password"
+                name="password_nueva"
+                placeholder="Mínimo 6 caracteres"
+                required
+            >
+
+            <label>
+                Confirmar nueva contraseña
+            </label>
+
+            <input
+                type="password"
+                name="confirmar"
+                required
+            >
+
+            <button type="submit">
+                🔄 Cambiar contraseña
+            </button>
+
+        </form>
+
+    </div>
+
+    <a
+        class="volver"
+        href="/admin"
+    >
+        ← Volver al administrador
+    </a>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Marco Sport</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            color: #111;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 35px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+        }
+
+        .admin-link {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            background: #333;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .admin-link:hover {
+            background: #444;
+        }
+
+        .contenedor {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .producto {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .producto img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .contenido {
+            padding: 20px;
+        }
+
+        .contenido h2 {
+            margin-top: 0;
+        }
+
+        .precio {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .selector-talla {
+            margin-top: 20px;
+        }
+
+        .selector-talla label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .selector-talla select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: white;
+            font-size: 16px;
+        }
+
+        .agregar-carrito {
+            width: 100%;
+            background: #111;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .agregar-carrito:hover {
+            background: #333;
+        }
+
+        .agotado {
+            display: block;
+            background: #999;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .sin-productos {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 15px;
+        }
+
+        /* CARRITO */
+
+        .carrito-boton {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #111;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+
+        .carrito-boton:hover {
+            transform: scale(1.03);
+        }
+
+        .carrito-fondo {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 2000;
+        }
+
+        .carrito-fondo.activo {
+            display: block;
+        }
+
+        .carrito {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 420px;
+            max-width: 100%;
+            background: white;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .carrito-cabecera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .carrito-cabecera h2 {
+            margin: 0;
+        }
+
+        .cerrar-carrito {
+            border: none;
+            background: #eee;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .item-carrito {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .item-carrito h3 {
+            margin: 0 0 8px 0;
+        }
+
+        .item-carrito p {
+            margin: 5px 0;
+        }
+
+        .controles-cantidad {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .controles-cantidad button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            background: #111;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .cantidad-numero {
+            font-weight: bold;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .quitar {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .carrito-total {
+            margin-top: 25px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .whatsapp-carrito {
+            display: block;
+            width: 100%;
+            background: #25D366;
+            color: white;
+            text-align: center;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .vaciar {
+            display: block;
+            width: 100%;
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .mensaje {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: none;
+            z-index: 3000;
+        }
+
+        @media (max-width: 800px) {
+
+            .productos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 550px) {
+
+            .productos {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 28px;
+            }
+
+            .admin-link {
+                position: static;
+                display: inline-block;
+                margin-top: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <a href="/login" class="admin-link">
+        Administrador
+    </a>
+
+    <h1>⚽ Marco Sport</h1>
+
+    <p>Tu tienda deportiva</p>
+
+</header>
+
+
+<div class="contenedor">
+
+    {% if productos %}
+
+        <div class="productos">
+
+            {% for producto in productos %}
+
+                <div class="producto">
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + producto.foto) }}"
+                        alt="{{ producto.modelo }}"
+                    >
+
+                    <div class="contenido">
+
+                        <h2>
+                            {{ producto.modelo }}
+                        </h2>
+
+                        <p class="precio">
+                            ${{ producto.precio }}
+                        </p>
+
+                        <p>
+                            {{ producto.descripcion }}
+                        </p>
+
+
+                        {% if producto.stock %}
+
+                            <div class="selector-talla">
+
+                                <label>
+                                    Selecciona tu talla:
+                                </label>
+
+                                <select
+                                    id="talla-{{ loop.index }}"
+                                >
+
+                                    {% for talla, cantidad in producto.stock.items() %}
+
+                                        <option value="{{ talla }}">
+                                            Talla {{ talla }} — {{ cantidad }} disponible(s)
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+                            <button
+                                class="agregar-carrito"
+                                onclick="agregarAlCarrito(
+                                    '{{ producto.modelo|e }}',
+                                    '{{ producto.precio|e }}',
+                                    'talla-{{ loop.index }}'
+                                )"
+                            >
+                                🛒 Agregar al carrito
+                            </button>
+
+                        {% else %}
+
+                            <span class="agotado">
+                                Agotado
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="sin-productos">
+
+            <h2>🏟️ No hay productos todavía</h2>
+
+            <p>
+                Pronto tendremos productos disponibles.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<button
+    class="carrito-boton"
+    onclick="abrirCarrito()"
+>
+    🛒 Carrito
+    (<span id="cantidad-carrito">0</span>)
+</button>
+
+
+<div
+    id="carrito-fondo"
+    class="carrito-fondo"
+    onclick="cerrarCarrito(event)"
+>
+
+    <div
+        class="carrito"
+        onclick="event.stopPropagation()"
+    >
+
+        <div class="carrito-cabecera">
+
+            <h2>🛒 Tu carrito</h2>
+
+            <button
+                class="cerrar-carrito"
+                onclick="cerrarCarrito()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div id="contenido-carrito">
+
+            <p>
+                Tu carrito está vacío.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div
+    id="mensaje"
+    class="mensaje"
+></div>
+
+
+<script>
+
+let carrito = [];
+
+
+/* AGREGAR AL CARRITO */
+
+function agregarAlCarrito(
+    modelo,
+    precio,
+    idTalla
+) {
+
+    const selector =
+        document.getElementById(idTalla);
+
+    const talla =
+        selector.value;
+
+    const existente =
+        carrito.find(
+            item =>
+                item.modelo === modelo &&
+                item.talla === talla
+        );
+
+
+    if (existente) {
+
+        existente.cantidad += 1;
+
+    } else {
+
+        carrito.push({
+
+            modelo: modelo,
+            precio: precio,
+            talla: talla,
+            cantidad: 1
+
+        });
+
+    }
+
+    actualizarCarrito();
+
+    mostrarMensaje(
+        "✅ Producto agregado al carrito"
+    );
+}
+
+
+/* ACTUALIZAR CARRITO */
+
+function actualizarCarrito() {
+
+    const contenedor =
+        document.getElementById(
+            "contenido-carrito"
+        );
+
+    const cantidad =
+        document.getElementById(
+            "cantidad-carrito"
+        );
+
+
+    cantidad.textContent =
+        carrito.reduce(
+            (total, item) =>
+                total + item.cantidad,
+            0
+        );
+
+
+    if (carrito.length === 0) {
+
+        contenedor.innerHTML =
+            "<p>Tu carrito está vacío.</p>";
+
+        return;
+    }
+
+
+    let html = "";
+
+    let total = 0;
+
+
+    carrito.forEach(
+        (item, indice) => {
+
+            const precioNumero =
+                convertirPrecio(
+                    item.precio
+                );
+
+            const subtotal =
+                precioNumero *
+                item.cantidad;
+
+            total += subtotal;
+
+
+            html += `
+
+                <div class="item-carrito">
+
+                    <h3>
+                        ${item.modelo}
+                    </h3>
+
+                    <p>
+                        Talla: ${item.talla}
+                    </p>
+
+                    <p>
+                        Precio:
+                        $${formatearPrecio(precioNumero)}
+                    </p>
+
+                    <div class="controles-cantidad">
+
+                        <button
+                            onclick="cambiarCantidad(${indice}, -1)"
+                        >
+                            −
+                        </button>
+
+                        <span class="cantidad-numero">
+                            ${item.cantidad}
+                        </span>
+
+                        <button
+                            onclick="cambiarCantidad(${indice}, 1)"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                    <p>
+                        Subtotal:
+                        <strong>
+                            $${formatearPrecio(subtotal)}
+                        </strong>
+                    </p>
+
+                    <button
+                        class="quitar"
+                        onclick="quitarProducto(${indice})"
+                    >
+                        Eliminar
+                    </button>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+        <div class="carrito-total">
+
+            Total:
+            $${formatearPrecio(total)}
+
+        </div>
+
+        <button
+            class="whatsapp-carrito"
+            onclick="enviarPedido()"
+        >
+            📲 Enviar pedido por WhatsApp
+        </button>
+
+        <button
+            class="vaciar"
+            onclick="vaciarCarrito()"
+        >
+            🗑️ Vaciar carrito
+        </button>
+
+    `;
+
+
+    contenedor.innerHTML = html;
+}
+
+
+/* CAMBIAR CANTIDAD */
+
+function cambiarCantidad(
+    indice,
+    cambio
+) {
+
+    carrito[indice].cantidad += cambio;
+
+
+    if (
+        carrito[indice].cantidad <= 0
+    ) {
+
+        carrito.splice(
+            indice,
+            1
+        );
+
+    }
+
+    actualizarCarrito();
+}
+
+
+/* ELIMINAR PRODUCTO */
+
+function quitarProducto(indice) {
+
+    carrito.splice(
+        indice,
+        1
+    );
+
+    actualizarCarrito();
+}
+
+
+/* VACIAR */
+
+function vaciarCarrito() {
+
+    carrito = [];
+
+    actualizarCarrito();
+}
+
+
+/* ABRIR CARRITO */
+
+function abrirCarrito() {
+
+    document
+        .getElementById(
+            "carrito-fondo"
+        )
+        .classList.add(
+            "activo"
+        );
+
+}
+
+
+/* CERRAR CARRITO */
+
+function cerrarCarrito(event) {
+
+    if (
+        event &&
+        event.target !== event.currentTarget
+    ) {
+
+        return;
+    }
+
+    document
+        .getElementById(
+            "carrito-fondo"
+        )
+        .classList.remove(
+            "activo"
+        );
+}
+
+
+/* CONVERTIR PRECIO */
+
+function convertirPrecio(precio) {
+
+    if (
+        typeof precio === "number"
+    ) {
+
+        return precio;
+
+    }
+
+
+    let limpio =
+        String(precio)
+            .replace(/\$/g, "")
+            .replace(/\./g, "")
+            .replace(/,/g, "");
+
+
+    const numero =
+        Number(limpio);
+
+
+    return isNaN(numero)
+        ? 0
+        : numero;
+}
+
+
+/* FORMATEAR PRECIO */
+
+function formatearPrecio(numero) {
+
+    return Number(numero)
+        .toLocaleString(
+            "es-CO"
+        );
+
+}
+
+
+/* MENSAJE */
+
+function mostrarMensaje(texto) {
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.style.display =
+        "block";
+
+
+    setTimeout(
+        () => {
+
+            mensaje.style.display =
+                "none";
+
+        },
+        2000
+    );
+
+}
+
+
+/* =========================
+   WHATSAPP
+   ========================= */
+
+async function enviarPedido() {
+
+    if (carrito.length === 0) {
+
+        return;
+    }
+
+
+    try {
+
+        const respuesta =
+            await fetch(
+                "/procesar-pedido",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            carrito
+                        )
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!resultado.ok) {
+
+            alert(
+                resultado.mensaje
+            );
+
+            return;
+        }
+
+
+        let mensaje =
+            "Hola, quiero hacer este pedido en Marco Sport:%0A%0A";
+
+
+        carrito.forEach(
+            item => {
+
+                mensaje +=
+                    `⚽ ${item.modelo}%0A` +
+                    `Talla: ${item.talla}%0A` +
+                    `Cantidad: ${item.cantidad}%0A` +
+                    `Precio: $${item.precio}%0A%0A`;
+
+            }
+        );
+
+
+        /*
+         * NÚMERO DE WHATSAPP DE MARCO SPORT
+         */
+
+        const numeroWhatsApp =
+            "573147611049";
+
+
+        const enlaceWhatsApp =
+            "https://wa.me/" +
+            numeroWhatsApp +
+            "?text=" +
+            mensaje;
+
+
+        window.open(
+            enlaceWhatsApp,
+            "_blank"
+        );
+
+
+        carrito = [];
+
+        actualizarCarrito();
+
+
+    } catch (error) {
+
+        alert(
+            "No se pudo procesar el pedido."
+        );
+
+        console.error(error);
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

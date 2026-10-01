@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Editar - Marco Sport</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+        }
+
+        .contenedor {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .tarjeta {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        button {
+            background: #111;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .volver {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #111;
+        }
+
+        .foto-actual {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tallas {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .talla {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            background: #fafafa;
+        }
+
+        .talla input {
+            margin-bottom: 0;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 600px) {
+
+            .tallas {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .foto-actual {
+                width: 100%;
+                height: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <div class="tarjeta">
+
+        <h1>✏️ Editar guayo</h1>
+
+
+        {% if error %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <h3>Foto actual</h3>
+
+        <img
+            class="foto-actual"
+            src="{{ url_for('static', filename='uploads/' + producto['foto']) }}"
+            alt="{{ producto['modelo'] }}"
+        >
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <label>
+                Cambiar foto
+            </label>
+
+            <input
+                type="file"
+                name="foto"
+                accept="image/*"
+            >
+
+
+            <label>
+                Modelo
+            </label>
+
+            <input
+                type="text"
+                name="modelo"
+                value="{{ producto['modelo'] }}"
+                required
+            >
+
+
+            <h3>📦 Inventario por talla</h3>
+
+            <p>
+                Actualiza cuántos pares tienes de cada talla.
+            </p>
+
+
+            <div class="tallas">
+
+                {% for talla in range(33, 46) %}
+
+                <div class="talla">
+
+                    <label>
+                        Talla {{ talla }}
+                    </label>
+
+                    <input
+                        type="number"
+                        name="stock_{{ talla }}"
+                        min="0"
+                        value="{{ producto.get('stock', {}).get(talla|string, 0) }}"
+                    >
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <label>
+                Precio
+            </label>
+
+            <input
+                type="text"
+                name="precio"
+                value="{{ producto['precio'] }}"
+                required
+            >
+
+
+            <label>
+                Descripción
+            </label>
+
+            <textarea
+                name="descripcion"
+                required
+            >{{ producto['descripcion'] }}</textarea>
+
+
+            <button type="submit">
+                💾 Guardar cambios
+            </button>
+
+        </form>
+
+
+        <a
+            class="volver"
+            href="{{ url_for('admin') }}"
+        >
+            ← Volver al panel
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
