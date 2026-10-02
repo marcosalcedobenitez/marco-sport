@@ -22,11 +22,8 @@ app.secret_key = os.environ.get(
 PRODUCTOS_FILE = "productos.json"
 DATABASE = "admin.db"
 
-# Bucket de Supabase Storage
 STORAGE_BUCKET = "productos"
 
-# Esta carpeta solamente conserva las imágenes antiguas.
-# Las nuevas imágenes NO se guardarán aquí.
 UPLOAD_FOLDER = "static/uploads"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -57,15 +54,10 @@ supabase = create_client(
 # ==================================================
 
 def subir_imagen_supabase(archivo):
-    """
-    Sube una imagen al bucket 'productos'
-    y devuelve su URL pública.
-    """
 
     if not archivo or archivo.filename == "":
         return None
 
-    # Obtener extensión original
     extension = os.path.splitext(
         archivo.filename
     )[1].lower()
@@ -73,29 +65,22 @@ def subir_imagen_supabase(archivo):
     if not extension:
         extension = ".jpg"
 
-    # Nombre único para evitar conflictos
     nombre_unico = (
         uuid.uuid4().hex + extension
     )
 
-    # IMPORTANTE:
-    # Esta ruta está DENTRO del bucket 'productos'.
-    # No agregamos nuevamente 'productos/'.
     ruta_storage = nombre_unico
 
-    # Leer el archivo
     contenido = archivo.read()
 
     if not contenido:
         return None
 
-    # Tipo MIME
     tipo_mime = (
         archivo.mimetype
         or "application/octet-stream"
     )
 
-    # Subir a Supabase Storage
     respuesta = supabase.storage.from_(
         STORAGE_BUCKET
     ).upload(
@@ -118,7 +103,6 @@ def subir_imagen_supabase(archivo):
         respuesta
     )
 
-    # Obtener URL pública
     url_publica = supabase.storage.from_(
         STORAGE_BUCKET
     ).get_public_url(
@@ -134,10 +118,6 @@ def subir_imagen_supabase(archivo):
 
 
 def eliminar_imagen_supabase(url_imagen):
-    """
-    Elimina una imagen de Supabase Storage
-    cuando conocemos su URL pública.
-    """
 
     if not url_imagen:
         return
@@ -151,8 +131,6 @@ def eliminar_imagen_supabase(url_imagen):
         + "/"
     )
 
-    # Si no es una imagen de nuestro bucket,
-    # no hacemos nada.
     if parte not in url_imagen:
         return
 
@@ -224,11 +202,6 @@ crear_base_datos()
 # ==================================================
 
 def importar_productos_json():
-
-    """
-    Importa los productos antiguos de productos.json
-    a Supabase solamente si la tabla está vacía.
-    """
 
     try:
 
@@ -321,11 +294,6 @@ def cargar_productos():
 
 
 def guardar_productos(productos):
-
-    """
-    Guarda la lista completa de productos
-    en Supabase.
-    """
 
     try:
 
@@ -892,10 +860,6 @@ def agregar():
             url_for("admin")
         )
 
-    # ==============================================
-    # SUBIR FOTO A SUPABASE STORAGE
-    # ==============================================
-
     try:
 
         url_foto = subir_imagen_supabase(
@@ -922,10 +886,6 @@ def agregar():
         return redirect(
             url_for("admin")
         )
-
-    # ==============================================
-    # CREAR PRODUCTO
-    # ==============================================
 
     productos = cargar_productos()
 
@@ -1039,10 +999,6 @@ def editar(indice):
                 )
             )
 
-        # ==========================================
-        # CAMBIAR FOTO SI SE SUBIÓ UNA NUEVA
-        # ==========================================
-
         if foto and foto.filename != "":
 
             foto_anterior = producto.get(
@@ -1068,8 +1024,6 @@ def editar(indice):
 
                 producto["foto"] = nueva_foto
 
-                # Eliminar la imagen anterior
-                # solamente si estaba en Supabase.
                 if foto_anterior:
 
                     eliminar_imagen_supabase(
@@ -1149,8 +1103,6 @@ def eliminar(indice):
             ""
         )
 
-        # Solo elimina imágenes que estén
-        # realmente en Supabase Storage.
         eliminar_imagen_supabase(
             foto
         )
@@ -1235,15 +1187,35 @@ def procesar_pedido():
                 )
             }), 400
 
+        # ==========================================
+        # BUSCAR POR MODELO + TALLA
+        # ==========================================
+
         producto_encontrado = None
 
         for producto in productos:
 
-            if (
+            modelo_producto = str(
                 producto.get(
                     "modelo",
                     ""
-                ).strip() == modelo
+                )
+            ).strip()
+
+            stock_producto = producto.get(
+                "stock",
+                {}
+            )
+
+            if not isinstance(
+                stock_producto,
+                dict
+            ):
+                stock_producto = {}
+
+            if (
+                modelo_producto == modelo
+                and talla in stock_producto
             ):
 
                 producto_encontrado = producto
@@ -1255,7 +1227,8 @@ def procesar_pedido():
             return jsonify({
                 "ok": False,
                 "mensaje": (
-                    f"El guayo '{modelo}' "
+                    f"El producto '{modelo}' "
+                    f"con talla {talla} "
                     "ya no está disponible."
                 )
             }), 409
