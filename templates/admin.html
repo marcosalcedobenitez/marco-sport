@@ -346,13 +346,29 @@
 
             <div class="producto">
 
-                <img
-                    src="{{ url_for(
-                        'static',
-                        filename='uploads/' + producto.foto
-                    ) }}"
-                    alt="{{ producto.modelo }}"
-                >
+
+                <!-- ========================= -->
+                <!-- IMAGEN DEL PRODUCTO -->
+                <!-- ========================= -->
+
+                {% if producto.foto and producto.foto.startswith('http') %}
+
+                    <img
+                        src="{{ producto.foto }}"
+                        alt="{{ producto.modelo }}"
+                    >
+
+                {% elif producto.foto %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='uploads/' + producto.foto
+                        ) }}"
+                        alt="{{ producto.modelo }}"
+                    >
+
+                {% endif %}
 
 
                 <h3>

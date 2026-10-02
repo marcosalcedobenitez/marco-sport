@@ -2,32 +2,203 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 import os
 import json
 import sqlite3
-from werkzeug.utils import secure_filename
+import uuid
+
 from werkzeug.security import generate_password_hash, check_password_hash
+from supabase import create_client
+
 
 app = Flask(__name__)
-app.secret_key = "MarcoSport_clave_2026_847291"
 
-UPLOAD_FOLDER = "static/uploads"
+# ==================================================
+# CONFIGURACIÓN
+# ==================================================
+
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "MarcoSport_clave_2026_847291"
+)
+
 PRODUCTOS_FILE = "productos.json"
 DATABASE = "admin.db"
+
+# Bucket de Supabase Storage
+STORAGE_BUCKET = "productos"
+
+# Esta carpeta solamente conserva las imágenes antiguas.
+# Las nuevas imágenes NO se guardarán aquí.
+UPLOAD_FOLDER = "static/uploads"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
-# =========================
-# BASE DE DATOS
-# =========================
+# ==================================================
+# SUPABASE
+# ==================================================
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise RuntimeError(
+        "Faltan las variables SUPABASE_URL y SUPABASE_KEY."
+    )
+
+supabase = create_client(
+    SUPABASE_URL,
+    SUPABASE_KEY
+)
+
+
+# ==================================================
+# FUNCIONES PARA IMÁGENES
+# ==================================================
+
+def subir_imagen_supabase(archivo):
+    """
+    Sube una imagen al bucket 'productos'
+    y devuelve su URL pública.
+    """
+
+    if not archivo or archivo.filename == "":
+        return None
+
+    # Obtener extensión original
+    extension = os.path.splitext(
+        archivo.filename
+    )[1].lower()
+
+    if not extension:
+        extension = ".jpg"
+
+    # Nombre único para evitar conflictos
+    nombre_unico = (
+        uuid.uuid4().hex + extension
+    )
+
+    # IMPORTANTE:
+    # Esta ruta está DENTRO del bucket 'productos'.
+    # No agregamos nuevamente 'productos/'.
+    ruta_storage = nombre_unico
+
+    # Leer el archivo
+    contenido = archivo.read()
+
+    if not contenido:
+        return None
+
+    # Tipo MIME
+    tipo_mime = (
+        archivo.mimetype
+        or "application/octet-stream"
+    )
+
+    # Subir a Supabase Storage
+    respuesta = supabase.storage.from_(
+        STORAGE_BUCKET
+    ).upload(
+        ruta_storage,
+        contenido,
+        {
+            "content-type": tipo_mime,
+            "cache-control": "3600",
+            "upsert": "false"
+        }
+    )
+
+    print(
+        "Imagen subida a Supabase Storage:",
+        ruta_storage
+    )
+
+    print(
+        "Respuesta de Supabase:",
+        respuesta
+    )
+
+    # Obtener URL pública
+    url_publica = supabase.storage.from_(
+        STORAGE_BUCKET
+    ).get_public_url(
+        ruta_storage
+    )
+
+    print(
+        "URL pública de la imagen:",
+        url_publica
+    )
+
+    return url_publica
+
+
+def eliminar_imagen_supabase(url_imagen):
+    """
+    Elimina una imagen de Supabase Storage
+    cuando conocemos su URL pública.
+    """
+
+    if not url_imagen:
+        return
+
+    if not isinstance(url_imagen, str):
+        return
+
+    parte = (
+        "storage/v1/object/public/"
+        + STORAGE_BUCKET
+        + "/"
+    )
+
+    # Si no es una imagen de nuestro bucket,
+    # no hacemos nada.
+    if parte not in url_imagen:
+        return
+
+    try:
+
+        ruta = url_imagen.split(
+            parte,
+            1
+        )[1]
+
+        if ruta:
+
+            supabase.storage.from_(
+                STORAGE_BUCKET
+            ).remove([
+                ruta
+            ])
+
+            print(
+                "Imagen eliminada de Supabase:",
+                ruta
+            )
+
+    except Exception as error:
+
+        print(
+            "No se pudo eliminar la imagen:",
+            error
+        )
+
+
+# ==================================================
+# BASE DE DATOS DEL ADMIN
+# ==================================================
 
 def conectar_db():
+
     conexion = sqlite3.connect(DATABASE)
+
     conexion.row_factory = sqlite3.Row
+
     return conexion
 
 
 def crear_base_datos():
+
     conexion = conectar_db()
 
     conexion.execute("""
@@ -41,36 +212,187 @@ def crear_base_datos():
     """)
 
     conexion.commit()
+
     conexion.close()
 
 
 crear_base_datos()
 
 
-# =========================
+# ==================================================
 # PRODUCTOS
-# =========================
+# ==================================================
 
-if not os.path.exists(PRODUCTOS_FILE):
-    with open(PRODUCTOS_FILE, "w", encoding="utf-8") as archivo:
-        json.dump([], archivo)
+def importar_productos_json():
+
+    """
+    Importa los productos antiguos de productos.json
+    a Supabase solamente si la tabla está vacía.
+    """
+
+    try:
+
+        respuesta = supabase.table(
+            "productos"
+        ).select("*").execute()
+
+        productos_supabase = respuesta.data or []
+
+        if productos_supabase:
+            return
+
+        if not os.path.exists(PRODUCTOS_FILE):
+            return
+
+        with open(
+            PRODUCTOS_FILE,
+            "r",
+            encoding="utf-8"
+        ) as archivo:
+
+            productos = json.load(archivo)
+
+        if not productos:
+            return
+
+        datos = []
+
+        for producto in productos:
+
+            datos.append({
+                "modelo": producto.get(
+                    "modelo",
+                    ""
+                ),
+
+                "tallas": producto.get(
+                    "tallas",
+                    ""
+                ),
+
+                "stock": producto.get(
+                    "stock",
+                    {}
+                ),
+
+                "precio": producto.get(
+                    "precio",
+                    ""
+                ),
+
+                "descripcion": producto.get(
+                    "descripcion",
+                    ""
+                ),
+
+                "foto": producto.get(
+                    "foto",
+                    ""
+                )
+            })
+
+        supabase.table(
+            "productos"
+        ).insert(datos).execute()
+
+        print(
+            "Productos antiguos importados a Supabase."
+        )
+
+    except Exception as error:
+
+        print(
+            "Error importando productos:",
+            error
+        )
 
 
 def cargar_productos():
-    with open(PRODUCTOS_FILE, "r", encoding="utf-8") as archivo:
-        return json.load(archivo)
+
+    importar_productos_json()
+
+    respuesta = supabase.table(
+        "productos"
+    ).select("*").order(
+        "id"
+    ).execute()
+
+    return respuesta.data or []
 
 
 def guardar_productos(productos):
-    with open(PRODUCTOS_FILE, "w", encoding="utf-8") as archivo:
-        json.dump(productos, archivo, ensure_ascii=False, indent=4)
+
+    """
+    Guarda la lista completa de productos
+    en Supabase.
+    """
+
+    try:
+
+        supabase.table(
+            "productos"
+        ).delete().neq(
+            "id",
+            0
+        ).execute()
+
+        if not productos:
+            return
+
+        datos = []
+
+        for producto in productos:
+
+            datos.append({
+                "modelo": producto.get(
+                    "modelo",
+                    ""
+                ),
+
+                "tallas": producto.get(
+                    "tallas",
+                    ""
+                ),
+
+                "stock": producto.get(
+                    "stock",
+                    {}
+                ),
+
+                "precio": producto.get(
+                    "precio",
+                    ""
+                ),
+
+                "descripcion": producto.get(
+                    "descripcion",
+                    ""
+                ),
+
+                "foto": producto.get(
+                    "foto",
+                    ""
+                )
+            })
+
+        supabase.table(
+            "productos"
+        ).insert(datos).execute()
+
+    except Exception as error:
+
+        print(
+            "Error guardando productos:",
+            error
+        )
 
 
-# =========================
+# ==================================================
 # ADMIN
-# =========================
+# ==================================================
 
 def obtener_admin():
+
     conexion = conectar_db()
 
     admin = conexion.execute(
@@ -82,9 +404,9 @@ def obtener_admin():
     return admin
 
 
-# =========================
+# ==================================================
 # TIENDA
-# =========================
+# ==================================================
 
 @app.route("/")
 def inicio():
@@ -92,7 +414,9 @@ def inicio():
     productos = cargar_productos()
 
     for producto in productos:
+
         if "stock" not in producto:
+
             producto["stock"] = {}
 
     return render_template(
@@ -101,43 +425,76 @@ def inicio():
     )
 
 
-# =========================
+# ==================================================
 # CONFIGURAR ADMIN
-# =========================
+# ==================================================
 
-@app.route("/configurar-admin", methods=["GET", "POST"])
+@app.route(
+    "/configurar-admin",
+    methods=["GET", "POST"]
+)
 def configurar_admin():
 
     admin = obtener_admin()
 
     if admin:
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     error = None
 
     if request.method == "POST":
 
-        nombre = request.form.get("nombre", "").strip()
-        telefono = request.form.get("telefono", "").strip()
-        usuario = request.form.get("usuario", "").strip()
-        password = request.form.get("password", "")
-        confirmar = request.form.get("confirmar", "")
+        nombre = request.form.get(
+            "nombre",
+            ""
+        ).strip()
+
+        telefono = request.form.get(
+            "telefono",
+            ""
+        ).strip()
+
+        usuario = request.form.get(
+            "usuario",
+            ""
+        ).strip()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+        confirmar = request.form.get(
+            "confirmar",
+            ""
+        )
 
         if not nombre or not telefono or not usuario or not password:
 
-            error = "Todos los campos son obligatorios."
+            error = (
+                "Todos los campos son obligatorios."
+            )
 
         elif len(password) < 6:
 
-            error = "La contraseña debe tener mínimo 6 caracteres."
+            error = (
+                "La contraseña debe tener mínimo 6 caracteres."
+            )
 
         elif password != confirmar:
 
-            error = "Las contraseñas no coinciden."
+            error = (
+                "Las contraseñas no coinciden."
+            )
 
         else:
 
-            password_hash = generate_password_hash(password)
+            password_hash = generate_password_hash(
+                password
+            )
 
             try:
 
@@ -155,13 +512,18 @@ def configurar_admin():
                 ))
 
                 conexion.commit()
+
                 conexion.close()
 
-                return redirect(url_for("login"))
+                return redirect(
+                    url_for("login")
+                )
 
             except sqlite3.IntegrityError:
 
-                error = "Ese usuario ya existe."
+                error = (
+                    "Ese usuario ya existe."
+                )
 
     return render_template(
         "configurar_admin.html",
@@ -169,27 +531,43 @@ def configurar_admin():
     )
 
 
-# =========================
+# ==================================================
 # LOGIN
-# =========================
+# ==================================================
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route(
+    "/login",
+    methods=["GET", "POST"]
+)
 def login():
 
     if session.get("admin_id"):
-        return redirect(url_for("admin"))
+
+        return redirect(
+            url_for("admin")
+        )
 
     admin = obtener_admin()
 
     if not admin:
-        return redirect(url_for("configurar_admin"))
+
+        return redirect(
+            url_for("configurar_admin")
+        )
 
     error = None
 
     if request.method == "POST":
 
-        usuario = request.form.get("usuario", "").strip()
-        password = request.form.get("password", "")
+        usuario = request.form.get(
+            "usuario",
+            ""
+        ).strip()
+
+        password = request.form.get(
+            "password",
+            ""
+        )
 
         conexion = conectar_db()
 
@@ -197,7 +575,9 @@ def login():
             SELECT *
             FROM administrador
             WHERE usuario = ?
-        """, (usuario,)).fetchone()
+        """, (
+            usuario,
+        )).fetchone()
 
         conexion.close()
 
@@ -207,11 +587,16 @@ def login():
         ):
 
             session.clear()
+
             session["admin_id"] = admin["id"]
 
-            return redirect(url_for("admin"))
+            return redirect(
+                url_for("admin")
+            )
 
-        error = "Usuario o contraseña incorrectos."
+        error = (
+            "Usuario o contraseña incorrectos."
+        )
 
     return render_template(
         "login.html",
@@ -219,22 +604,27 @@ def login():
     )
 
 
-# =========================
+# ==================================================
 # PANEL ADMIN
-# =========================
+# ==================================================
 
 @app.route("/admin")
 def admin():
 
     if not session.get("admin_id"):
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     productos = cargar_productos()
+
     admin = obtener_admin()
 
     for producto in productos:
 
         if "stock" not in producto:
+
             producto["stock"] = {}
 
     return render_template(
@@ -244,15 +634,21 @@ def admin():
     )
 
 
-# =========================
-# CONFIGURACION
-# =========================
+# ==================================================
+# CONFIGURACIÓN
+# ==================================================
 
-@app.route("/configuracion", methods=["GET", "POST"])
+@app.route(
+    "/configuracion",
+    methods=["GET", "POST"]
+)
 def configuracion():
 
     if not session.get("admin_id"):
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     admin = obtener_admin()
 
@@ -261,13 +657,26 @@ def configuracion():
 
     if request.method == "POST":
 
-        nombre = request.form.get("nombre", "").strip()
-        telefono = request.form.get("telefono", "").strip()
-        usuario = request.form.get("usuario", "").strip()
+        nombre = request.form.get(
+            "nombre",
+            ""
+        ).strip()
+
+        telefono = request.form.get(
+            "telefono",
+            ""
+        ).strip()
+
+        usuario = request.form.get(
+            "usuario",
+            ""
+        ).strip()
 
         if not nombre or not telefono or not usuario:
 
-            error = "Todos los campos son obligatorios."
+            error = (
+                "Todos los campos son obligatorios."
+            )
 
         else:
 
@@ -289,15 +698,20 @@ def configuracion():
                 ))
 
                 conexion.commit()
+
                 conexion.close()
 
-                mensaje = "Datos actualizados correctamente."
+                mensaje = (
+                    "Datos actualizados correctamente."
+                )
 
                 admin = obtener_admin()
 
             except sqlite3.IntegrityError:
 
-                error = "Ese usuario ya está siendo utilizado."
+                error = (
+                    "Ese usuario ya está siendo utilizado."
+                )
 
     return render_template(
         "configuracion.html",
@@ -307,15 +721,21 @@ def configuracion():
     )
 
 
-# =========================
+# ==================================================
 # CAMBIAR PASSWORD
-# =========================
+# ==================================================
 
-@app.route("/cambiar-password", methods=["POST"])
+@app.route(
+    "/cambiar-password",
+    methods=["POST"]
+)
 def cambiar_password():
 
     if not session.get("admin_id"):
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     password_actual = request.form.get(
         "password_actual",
@@ -341,15 +761,21 @@ def cambiar_password():
         password_actual
     ):
 
-        error = "La contraseña actual es incorrecta."
+        error = (
+            "La contraseña actual es incorrecta."
+        )
 
     elif len(password_nueva) < 6:
 
-        error = "La nueva contraseña debe tener mínimo 6 caracteres."
+        error = (
+            "La nueva contraseña debe tener mínimo 6 caracteres."
+        )
 
     elif password_nueva != confirmar:
 
-        error = "Las nuevas contraseñas no coinciden."
+        error = (
+            "Las nuevas contraseñas no coinciden."
+        )
 
     else:
 
@@ -369,6 +795,7 @@ def cambiar_password():
         ))
 
         conexion.commit()
+
         conexion.close()
 
         return redirect(
@@ -382,9 +809,9 @@ def cambiar_password():
     )
 
 
-# =========================
+# ==================================================
 # STOCK DEL FORMULARIO
-# =========================
+# ==================================================
 
 def obtener_stock_formulario():
 
@@ -398,29 +825,39 @@ def obtener_stock_formulario():
         )
 
         try:
+
             cantidad = int(cantidad)
 
         except ValueError:
+
             cantidad = 0
 
         if cantidad < 0:
+
             cantidad = 0
 
         if cantidad > 0:
+
             stock[str(talla)] = cantidad
 
     return stock
 
 
-# =========================
+# ==================================================
 # AGREGAR PRODUCTO
-# =========================
+# ==================================================
 
-@app.route("/agregar", methods=["POST"])
+@app.route(
+    "/agregar",
+    methods=["POST"]
+)
 def agregar():
 
     if not session.get("admin_id"):
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     modelo = request.form.get(
         "modelo",
@@ -437,26 +874,58 @@ def agregar():
         ""
     ).strip()
 
-    foto = request.files.get("foto")
+    foto = request.files.get(
+        "foto"
+    )
 
     stock = obtener_stock_formulario()
 
     if not modelo or not precio or not descripcion:
-        return redirect(url_for("admin"))
+
+        return redirect(
+            url_for("admin")
+        )
 
     if not foto or foto.filename == "":
-        return redirect(url_for("admin"))
 
-    nombre_foto = secure_filename(
-        foto.filename
-    )
+        return redirect(
+            url_for("admin")
+        )
 
-    ruta_foto = os.path.join(
-        app.config["UPLOAD_FOLDER"],
-        nombre_foto
-    )
+    # ==============================================
+    # SUBIR FOTO A SUPABASE STORAGE
+    # ==============================================
 
-    foto.save(ruta_foto)
+    try:
+
+        url_foto = subir_imagen_supabase(
+            foto
+        )
+
+    except Exception as error:
+
+        print(
+            "ERROR SUBIENDO IMAGEN A SUPABASE:",
+            error
+        )
+
+        return redirect(
+            url_for("admin")
+        )
+
+    if not url_foto:
+
+        print(
+            "La imagen no devolvió una URL pública."
+        )
+
+        return redirect(
+            url_for("admin")
+        )
+
+    # ==============================================
+    # CREAR PRODUCTO
+    # ==============================================
 
     productos = cargar_productos()
 
@@ -465,7 +934,10 @@ def agregar():
         "modelo": modelo,
 
         "tallas": ", ".join(
-            stock.keys()
+            sorted(
+                stock.keys(),
+                key=lambda x: int(x)
+            )
         ),
 
         "stock": stock,
@@ -474,23 +946,25 @@ def agregar():
 
         "descripcion": descripcion,
 
-        "foto": nombre_foto
+        "foto": url_foto
     }
 
     productos.append(
         nuevo_producto
     )
 
-    guardar_productos(productos)
+    guardar_productos(
+        productos
+    )
 
     return redirect(
         url_for("admin")
     )
 
 
-# =========================
+# ==================================================
 # EDITAR PRODUCTO
-# =========================
+# ==================================================
 
 @app.route(
     "/editar/<int:indice>",
@@ -499,12 +973,18 @@ def agregar():
 def editar(indice):
 
     if not session.get("admin_id"):
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     productos = cargar_productos()
 
     if indice < 0 or indice >= len(productos):
-        return redirect(url_for("admin"))
+
+        return redirect(
+            url_for("admin")
+        )
 
     producto = productos[indice]
 
@@ -522,6 +1002,7 @@ def editar(indice):
             talla = talla.strip()
 
             if talla:
+
                 producto["stock"][talla] = 1
 
     if request.method == "POST":
@@ -541,7 +1022,9 @@ def editar(indice):
             ""
         ).strip()
 
-        foto = request.files.get("foto")
+        foto = request.files.get(
+            "foto"
+        )
 
         stock = obtener_stock_formulario()
 
@@ -551,45 +1034,71 @@ def editar(indice):
                 "editar.html",
                 producto=producto,
                 indice=indice,
-                error="Todos los campos son obligatorios."
+                error=(
+                    "Todos los campos son obligatorios."
+                )
             )
+
+        # ==========================================
+        # CAMBIAR FOTO SI SE SUBIÓ UNA NUEVA
+        # ==========================================
 
         if foto and foto.filename != "":
-
-            nueva_foto = secure_filename(
-                foto.filename
-            )
-
-            ruta_nueva = os.path.join(
-                app.config["UPLOAD_FOLDER"],
-                nueva_foto
-            )
-
-            foto.save(ruta_nueva)
 
             foto_anterior = producto.get(
                 "foto"
             )
 
-            if foto_anterior:
+            try:
 
-                ruta_anterior = os.path.join(
-                    app.config["UPLOAD_FOLDER"],
-                    foto_anterior
+                nueva_foto = subir_imagen_supabase(
+                    foto
                 )
 
-                if (
-                    os.path.exists(ruta_anterior)
-                    and foto_anterior != nueva_foto
-                ):
-                    os.remove(ruta_anterior)
+                if not nueva_foto:
 
-            producto["foto"] = nueva_foto
+                    return render_template(
+                        "editar.html",
+                        producto=producto,
+                        indice=indice,
+                        error=(
+                            "No se pudo subir la nueva imagen."
+                        )
+                    )
+
+                producto["foto"] = nueva_foto
+
+                # Eliminar la imagen anterior
+                # solamente si estaba en Supabase.
+                if foto_anterior:
+
+                    eliminar_imagen_supabase(
+                        foto_anterior
+                    )
+
+            except Exception as error:
+
+                print(
+                    "ERROR CAMBIANDO IMAGEN:",
+                    error
+                )
+
+                return render_template(
+                    "editar.html",
+                    producto=producto,
+                    indice=indice,
+                    error=(
+                        "No se pudo subir la nueva imagen."
+                    )
+                )
 
         producto["modelo"] = modelo
 
         producto["tallas"] = ", ".join(
-            stock.keys()
+            sorted(
+                stock.keys(),
+                key=lambda x: int(x)
+            )
         )
 
         producto["stock"] = stock
@@ -598,7 +1107,9 @@ def editar(indice):
 
         producto["descripcion"] = descripcion
 
-        guardar_productos(productos)
+        guardar_productos(
+            productos
+        )
 
         return redirect(
             url_for("admin")
@@ -612,15 +1123,20 @@ def editar(indice):
     )
 
 
-# =========================
+# ==================================================
 # ELIMINAR PRODUCTO
-# =========================
+# ==================================================
 
-@app.route("/eliminar/<int:indice>")
+@app.route(
+    "/eliminar/<int:indice>"
+)
 def eliminar(indice):
 
     if not session.get("admin_id"):
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     productos = cargar_productos()
 
@@ -628,17 +1144,22 @@ def eliminar(indice):
 
         producto = productos[indice]
 
-        ruta_foto = os.path.join(
-            app.config["UPLOAD_FOLDER"],
-            producto["foto"]
+        foto = producto.get(
+            "foto",
+            ""
         )
 
-        if os.path.exists(ruta_foto):
-            os.remove(ruta_foto)
+        # Solo elimina imágenes que estén
+        # realmente en Supabase Storage.
+        eliminar_imagen_supabase(
+            foto
+        )
 
         productos.pop(indice)
 
-        guardar_productos(productos)
+        guardar_productos(
+            productos
+        )
 
     return redirect(
         url_for("admin")
@@ -647,10 +1168,6 @@ def eliminar(indice):
 
 # ==================================================
 # PEDIDO DE WHATSAPP
-# ==================================================
-# IMPORTANTE:
-# AQUÍ YA NO SE DESCUENTA EL STOCK.
-# SOLO COMPROBAMOS QUE EL PEDIDO SEA POSIBLE.
 # ==================================================
 
 @app.route(
@@ -672,15 +1189,20 @@ def procesar_pedido():
 
     productos = cargar_productos()
 
-    # COMPROBAR QUE TODO EXISTA
     for item in datos:
 
         modelo = str(
-            item.get("modelo", "")
+            item.get(
+                "modelo",
+                ""
+            )
         ).strip()
 
         talla = str(
-            item.get("talla", "")
+            item.get(
+                "talla",
+                ""
+            )
         ).strip()
 
         try:
@@ -692,7 +1214,10 @@ def procesar_pedido():
                 )
             )
 
-        except (ValueError, TypeError):
+        except (
+            ValueError,
+            TypeError
+        ):
 
             cantidad = 0
 
@@ -704,7 +1229,10 @@ def procesar_pedido():
 
             return jsonify({
                 "ok": False,
-                "mensaje": "Hay un producto inválido en el carrito."
+                "mensaje": (
+                    "Hay un producto inválido "
+                    "en el carrito."
+                )
             }), 400
 
         producto_encontrado = None
@@ -719,13 +1247,17 @@ def procesar_pedido():
             ):
 
                 producto_encontrado = producto
+
                 break
 
         if producto_encontrado is None:
 
             return jsonify({
                 "ok": False,
-                "mensaje": f"El guayo '{modelo}' ya no está disponible."
+                "mensaje": (
+                    f"El guayo '{modelo}' "
+                    "ya no está disponible."
+                )
             }), 409
 
         stock = producto_encontrado.get(
@@ -742,7 +1274,10 @@ def procesar_pedido():
                 )
             )
 
-        except (ValueError, TypeError):
+        except (
+            ValueError,
+            TypeError
+        ):
 
             disponible = 0
 
@@ -757,7 +1292,8 @@ def procesar_pedido():
                 )
             }), 409
 
-    # 🚨 AQUÍ NO SE MODIFICA EL STOCK 🚨
+    # IMPORTANTE:
+    # EL PEDIDO DE WHATSAPP NO DESCUENTA STOCK.
 
     return jsonify({
         "ok": True,
@@ -776,7 +1312,10 @@ def procesar_pedido():
 def marcar_vendido():
 
     if not session.get("admin_id"):
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     try:
 
@@ -801,13 +1340,17 @@ def marcar_vendido():
             )
         )
 
-    except (ValueError, TypeError):
+    except (
+        ValueError,
+        TypeError
+    ):
 
         return redirect(
             url_for("admin")
         )
 
     if cantidad <= 0:
+
         return redirect(
             url_for("admin")
         )
@@ -836,7 +1379,10 @@ def marcar_vendido():
             )
         )
 
-    except (ValueError, TypeError):
+    except (
+        ValueError,
+        TypeError
+    ):
 
         disponible = 0
 
@@ -846,8 +1392,9 @@ def marcar_vendido():
             url_for("admin")
         )
 
-    # AHORA SÍ DESCONTAMOS
-    stock[talla] = disponible - cantidad
+    stock[talla] = (
+        disponible - cantidad
+    )
 
     if stock[talla] <= 0:
 
@@ -860,16 +1407,18 @@ def marcar_vendido():
         )
     )
 
-    guardar_productos(productos)
+    guardar_productos(
+        productos
+    )
 
     return redirect(
         url_for("admin")
     )
 
 
-# =========================
+# ==================================================
 # CERRAR SESIÓN
-# =========================
+# ==================================================
 
 @app.route("/logout")
 def logout():
@@ -881,9 +1430,9 @@ def logout():
     )
 
 
-# =========================
+# ==================================================
 # INICIAR SERVIDOR
-# =========================
+# ==================================================
 
 if __name__ == "__main__":
 

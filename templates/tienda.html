@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 
@@ -365,10 +366,23 @@
 
                 <div class="producto">
 
-                    <img
-                        src="{{ url_for('static', filename='uploads/' + producto.foto) }}"
-                        alt="{{ producto.modelo }}"
-                    >
+                    <!-- IMAGEN -->
+                    {% if producto.foto and producto.foto.startswith('http') %}
+
+                        <img
+                            src="{{ producto.foto }}"
+                            alt="{{ producto.modelo }}"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{{ url_for('static', filename='uploads/' + producto.foto) }}"
+                            alt="{{ producto.modelo }}"
+                        >
+
+                    {% endif %}
+
 
                     <div class="contenido">
 
@@ -964,3 +978,4 @@ async function enviarPedido() {
 </body>
 
 </html>
+```
