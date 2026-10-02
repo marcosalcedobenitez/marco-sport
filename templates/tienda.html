@@ -16,164 +16,319 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f5f5;
             margin: 0;
             color: #111;
         }
 
+        /* =========================
+           HEADER
+           ========================= */
+
         header {
             background: #111;
             color: white;
+            padding: 22px 18px 25px;
             text-align: center;
-            padding: 30px 15px;
             position: relative;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.18);
         }
 
-        header h1 {
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
             margin: 0;
-            font-size: 35px;
         }
 
-        header p {
-            margin: 8px 0 0;
+        .subtitulo {
+            margin: 6px 0 0;
+            color: #cfcfcf;
+            font-size: 15px;
         }
 
         .admin-link {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            color: white;
+            top: 18px;
+            right: 18px;
+
+            color: #fff;
             text-decoration: none;
-            background: #333;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 14px;
+
+            background: #242424;
+
+            padding: 9px 13px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+            font-weight: bold;
+
+            transition: 0.2s;
         }
 
         .admin-link:hover {
-            background: #444;
+            background: #3a3a3a;
         }
 
+
+        /* =========================
+           CONTENEDOR
+           ========================= */
+
         .contenedor {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 18px 110px;
         }
+
+
+        /* =========================
+           PRODUCTOS
+           ========================= */
 
         .productos {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            gap: 24px;
         }
 
         .producto {
             background: white;
-            border-radius: 15px;
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+
+            box-shadow:
+                0 4px 16px rgba(0,0,0,0.07);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
         }
 
-        .producto img {
+        .producto:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 24px rgba(0,0,0,0.11);
+        }
+
+
+        /* IMAGEN */
+
+        .imagen-producto {
             width: 100%;
             height: 280px;
+
             object-fit: cover;
+
             display: block;
+
+            background: #eee;
         }
+
+
+        /* CONTENIDO */
 
         .contenido {
             padding: 20px;
         }
 
         .contenido h2 {
-            margin-top: 0;
+            margin: 0 0 8px;
+
+            font-size: 22px;
+            line-height: 1.2;
         }
 
         .precio {
-            font-size: 22px;
-            font-weight: bold;
+            margin: 0 0 12px;
+
+            font-size: 24px;
+            font-weight: 800;
         }
 
+        .descripcion {
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            min-height: 42px;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* TALLAS */
+
         .selector-talla {
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .selector-talla label {
             display: block;
+
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 8px;
+
+            margin-bottom: 7px;
         }
 
         .selector-talla select {
             width: 100%;
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+
+            padding: 13px 12px;
+
+            border: 1px solid #d5d5d5;
+
+            border-radius: 10px;
+
             background: white;
+
             font-size: 16px;
+
+            outline: none;
         }
+
+        .selector-talla select:focus {
+            border-color: #111;
+        }
+
+
+        /* BOTÓN CARRITO */
 
         .agregar-carrito {
             width: 100%;
+
             background: #111;
             color: white;
+
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 12px;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            margin-top: 11px;
+
             font-weight: bold;
+            font-size: 15px;
+
             cursor: pointer;
+
+            transition:
+                background 0.2s,
+                transform 0.1s;
         }
 
         .agregar-carrito:hover {
-            background: #333;
+            background: #292929;
         }
+
+        .agregar-carrito:active {
+            transform: scale(0.98);
+        }
+
+
+        /* AGOTADO */
 
         .agotado {
             display: block;
-            background: #999;
-            color: white;
+
+            background: #e5e5e5;
+            color: #666;
+
             text-align: center;
-            padding: 12px;
-            border-radius: 8px;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
             margin-top: 15px;
+
             font-weight: bold;
         }
 
+
+        /* SIN PRODUCTOS */
+
         .sin-productos {
             text-align: center;
-            padding: 50px;
+
+            padding: 60px 25px;
+
             background: white;
-            border-radius: 15px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.06);
         }
 
-        /* CARRITO */
+        .sin-productos h2 {
+            margin-top: 0;
+        }
+
+
+        /* =========================
+           BOTÓN DEL CARRITO
+           ========================= */
 
         .carrito-boton {
             position: fixed;
+
             right: 20px;
             bottom: 20px;
+
             background: #111;
             color: white;
+
             border: none;
-            padding: 15px 20px;
+
+            padding: 15px 21px;
+
             border-radius: 30px;
-            font-size: 16px;
+
+            font-size: 15px;
+            font-weight: bold;
+
             cursor: pointer;
+
             z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.28);
+
+            transition:
+                transform 0.2s;
         }
 
         .carrito-boton:hover {
-            transform: scale(1.03);
+            transform: translateY(-2px);
         }
+
+
+        /* =========================
+           FONDO CARRITO
+           ========================= */
 
         .carrito-fondo {
             display: none;
+
             position: fixed;
+
             inset: 0;
-            background: rgba(0,0,0,0.55);
+
+            background: rgba(0,0,0,0.58);
+
             z-index: 2000;
         }
 
@@ -181,157 +336,387 @@
             display: block;
         }
 
+
+        /* =========================
+           CARRITO
+           ========================= */
+
         .carrito {
             position: absolute;
+
             right: 0;
             top: 0;
+
             height: 100%;
-            width: 420px;
+
+            width: 430px;
             max-width: 100%;
+
             background: white;
-            padding: 25px;
+
+            padding: 24px;
+
             overflow-y: auto;
+
+            box-shadow:
+                -5px 0 25px rgba(0,0,0,0.15);
         }
 
         .carrito-cabecera {
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
-            border-bottom: 1px solid #ddd;
+
+            border-bottom: 1px solid #e5e5e5;
+
             padding-bottom: 15px;
-            margin-bottom: 20px;
+
+            margin-bottom: 10px;
         }
 
         .carrito-cabecera h2 {
             margin: 0;
+
+            font-size: 22px;
         }
 
         .cerrar-carrito {
             border: none;
+
             background: #eee;
+
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
+
+            width: 38px;
+            height: 38px;
+
             cursor: pointer;
+
             font-size: 18px;
+
+            transition: 0.2s;
         }
 
+        .cerrar-carrito:hover {
+            background: #ddd;
+        }
+
+
+        /* ITEMS */
+
         .item-carrito {
-            border-bottom: 1px solid #ddd;
-            padding: 15px 0;
+            border-bottom: 1px solid #e5e5e5;
+
+            padding: 17px 0;
         }
 
         .item-carrito h3 {
-            margin: 0 0 8px 0;
+            margin: 0 0 7px;
+
+            font-size: 18px;
         }
 
         .item-carrito p {
             margin: 5px 0;
+
+            color: #555;
+
+            font-size: 14px;
         }
 
         .controles-cantidad {
             display: flex;
+
             align-items: center;
+
             gap: 10px;
-            margin-top: 10px;
+
+            margin-top: 12px;
         }
 
         .controles-cantidad button {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
+
             border: none;
-            border-radius: 6px;
+
+            border-radius: 8px;
+
             background: #111;
             color: white;
-            font-size: 18px;
+
+            font-size: 19px;
+
             cursor: pointer;
         }
 
         .cantidad-numero {
             font-weight: bold;
+
             min-width: 25px;
+
             text-align: center;
         }
 
         .quitar {
             background: #dc2626;
             color: white;
+
             border: none;
-            padding: 7px 10px;
-            border-radius: 6px;
+
+            padding: 9px 12px;
+
+            border-radius: 8px;
+
             cursor: pointer;
+
             margin-top: 10px;
+
+            font-weight: bold;
         }
+
+
+        /* TOTAL */
 
         .carrito-total {
             margin-top: 25px;
-            font-size: 22px;
-            font-weight: bold;
+
+            font-size: 23px;
+
+            font-weight: 800;
         }
+
+
+        /* WHATSAPP */
 
         .whatsapp-carrito {
             display: block;
+
             width: 100%;
+
             background: #25D366;
             color: white;
+
             text-align: center;
+
             border: none;
-            padding: 14px;
-            border-radius: 8px;
-            margin-top: 15px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            margin-top: 17px;
+
             font-weight: bold;
+
             cursor: pointer;
+
             font-size: 16px;
+
+            transition: 0.2s;
         }
+
+        .whatsapp-carrito:hover {
+            background: #20bd5b;
+        }
+
+
+        /* VACIAR */
 
         .vaciar {
             display: block;
+
             width: 100%;
-            background: #dc2626;
-            color: white;
+
+            background: #eee;
+            color: #c00;
+
             border: none;
-            padding: 12px;
-            border-radius: 8px;
+
+            padding: 13px;
+
+            border-radius: 10px;
+
             margin-top: 10px;
+
             cursor: pointer;
+
             font-weight: bold;
         }
 
+
+        /* =========================
+           MENSAJE
+           ========================= */
+
         .mensaje {
             position: fixed;
+
             top: 20px;
             left: 50%;
+
             transform: translateX(-50%);
+
             background: #111;
             color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
+
+            padding: 13px 20px;
+
+            border-radius: 10px;
+
             display: none;
+
             z-index: 3000;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.25);
+
+            font-size: 14px;
+
+            white-space: nowrap;
         }
 
-        @media (max-width: 800px) {
+
+        /* =========================
+           TABLET
+           ========================= */
+
+        @media (max-width: 900px) {
 
             .productos {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-        }
-
-        @media (max-width: 550px) {
-
-            .productos {
-                grid-template-columns: 1fr;
+            .imagen-producto {
+                height: 250px;
             }
 
-            header h1 {
-                font-size: 28px;
+        }
+
+
+        /* =========================
+           CELULAR
+           ========================= */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 20px 15px 22px;
+            }
+
+            .logo {
+                font-size: 27px;
+            }
+
+            .subtitulo {
+                font-size: 14px;
             }
 
             .admin-link {
                 position: static;
+
                 display: inline-block;
-                margin-top: 15px;
+
+                margin-top: 14px;
+
+                padding: 8px 12px;
+            }
+
+            .contenedor {
+                padding: 18px 12px 100px;
+            }
+
+            .productos {
+                grid-template-columns: 1fr;
+
+                gap: 17px;
+            }
+
+            .producto {
+                border-radius: 15px;
+            }
+
+            .imagen-producto {
+                height: 270px;
+            }
+
+            .contenido {
+                padding: 17px;
+            }
+
+            .contenido h2 {
+                font-size: 21px;
+            }
+
+            .precio {
+                font-size: 23px;
+            }
+
+            .descripcion {
+                font-size: 14px;
+            }
+
+            .selector-talla select {
+                padding: 14px 12px;
+            }
+
+            .agregar-carrito {
+                padding: 15px;
+            }
+
+            .carrito-boton {
+                right: 14px;
+                bottom: 14px;
+
+                padding: 14px 18px;
+
+                font-size: 14px;
+            }
+
+            .carrito {
+                width: 100%;
+
+                padding: 20px 17px;
+            }
+
+            .mensaje {
+                top: 15px;
+
+                max-width: calc(100% - 30px);
+
+                text-align: center;
+
+                white-space: normal;
+
+                width: max-content;
+            }
+
+        }
+
+
+        /* =========================
+           CELULARES PEQUEÑOS
+           ========================= */
+
+        @media (max-width: 380px) {
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .imagen-producto {
+                height: 240px;
+            }
+
+            .contenido {
+                padding: 15px;
+            }
+
+            .carrito-boton {
+                font-size: 13px;
+                padding: 13px 16px;
             }
 
         }
@@ -340,43 +725,58 @@
 
 </head>
 
+
 <body>
+
 
 <header>
 
     <a href="/login" class="admin-link">
-        Administrador
+        ⚙️ Administrador
     </a>
 
-    <h1>⚽ Marco Sport</h1>
+    <h1 class="logo">
+        ⚽ Marco Sport
+    </h1>
 
-    <p>Tu tienda deportiva</p>
+    <p class="subtitulo">
+        Tu tienda deportiva
+    </p>
 
 </header>
 
 
 <div class="contenedor">
 
+
     {% if productos %}
+
 
         <div class="productos">
 
+
             {% for producto in productos %}
 
+
                 <div class="producto">
+
 
                     {% if producto.foto and producto.foto.startswith('http') %}
 
                         <img
+                            class="imagen-producto"
                             src="{{ producto.foto }}"
                             alt="{{ producto.modelo }}"
+                            loading="lazy"
                         >
 
                     {% else %}
 
                         <img
+                            class="imagen-producto"
                             src="{{ url_for('static', filename='uploads/' + producto.foto) }}"
                             alt="{{ producto.modelo }}"
+                            loading="lazy"
                         >
 
                     {% endif %}
@@ -384,26 +784,31 @@
 
                     <div class="contenido">
 
+
                         <h2>
                             {{ producto.modelo }}
                         </h2>
+
 
                         <p class="precio">
                             ${{ producto.precio }}
                         </p>
 
-                        <p>
+
+                        <p class="descripcion">
                             {{ producto.descripcion }}
                         </p>
 
 
                         {% if producto.stock %}
 
+
                             <div class="selector-talla">
 
                                 <label>
-                                    Selecciona tu talla:
+                                    Selecciona tu talla
                                 </label>
+
 
                                 <select
                                     id="talla-{{ loop.index }}"
@@ -433,27 +838,38 @@
                                 🛒 Agregar al carrito
                             </button>
 
+
                         {% else %}
+
 
                             <span class="agotado">
                                 Agotado
                             </span>
 
+
                         {% endif %}
+
 
                     </div>
 
+
                 </div>
+
 
             {% endfor %}
 
+
         </div>
+
 
     {% else %}
 
+
         <div class="sin-productos">
 
-            <h2>🏟️ No hay productos todavía</h2>
+            <h2>
+                🏟️ No hay productos todavía
+            </h2>
 
             <p>
                 Pronto tendremos productos disponibles.
@@ -461,10 +877,16 @@
 
         </div>
 
+
     {% endif %}
+
 
 </div>
 
+
+<!-- =========================
+     BOTÓN CARRITO
+     ========================= -->
 
 <button
     class="carrito-boton"
@@ -475,20 +897,29 @@
 </button>
 
 
+<!-- =========================
+     CARRITO
+     ========================= -->
+
 <div
     id="carrito-fondo"
     class="carrito-fondo"
     onclick="cerrarCarrito(event)"
 >
 
+
     <div
         class="carrito"
         onclick="event.stopPropagation()"
     >
 
+
         <div class="carrito-cabecera">
 
-            <h2>🛒 Tu carrito</h2>
+            <h2>
+                🛒 Tu carrito
+            </h2>
+
 
             <button
                 class="cerrar-carrito"
@@ -499,6 +930,7 @@
 
         </div>
 
+
         <div id="contenido-carrito">
 
             <p>
@@ -507,10 +939,13 @@
 
         </div>
 
+
     </div>
 
 </div>
 
+
+<!-- MENSAJE -->
 
 <div
     id="mensaje"
@@ -520,10 +955,13 @@
 
 <script>
 
+
 let carrito = [];
 
 
-/* AGREGAR AL CARRITO */
+/* =========================
+   AGREGAR AL CARRITO
+   ========================= */
 
 function agregarAlCarrito(
     modelo,
@@ -536,6 +974,7 @@ function agregarAlCarrito(
 
     const talla =
         selector.value;
+
 
     const existente =
         carrito.find(
@@ -554,23 +993,31 @@ function agregarAlCarrito(
         carrito.push({
 
             modelo: modelo,
+
             precio: precio,
+
             talla: talla,
+
             cantidad: 1
 
         });
 
     }
 
+
     actualizarCarrito();
+
 
     mostrarMensaje(
         "✅ Producto agregado al carrito"
     );
+
 }
 
 
-/* ACTUALIZAR CARRITO */
+/* =========================
+   ACTUALIZAR CARRITO
+   ========================= */
 
 function actualizarCarrito() {
 
@@ -578,6 +1025,7 @@ function actualizarCarrito() {
         document.getElementById(
             "contenido-carrito"
         );
+
 
     const cantidad =
         document.getElementById(
@@ -599,6 +1047,7 @@ function actualizarCarrito() {
             "<p>Tu carrito está vacío.</p>";
 
         return;
+
     }
 
 
@@ -610,14 +1059,17 @@ function actualizarCarrito() {
     carrito.forEach(
         (item, indice) => {
 
+
             const precioNumero =
                 convertirPrecio(
                     item.precio
                 );
 
+
             const subtotal =
                 precioNumero *
                 item.cantidad;
+
 
             total += subtotal;
 
@@ -639,6 +1091,7 @@ function actualizarCarrito() {
                         $${formatearPrecio(precioNumero)}
                     </p>
 
+
                     <div class="controles-cantidad">
 
                         <button
@@ -647,9 +1100,11 @@ function actualizarCarrito() {
                             −
                         </button>
 
+
                         <span class="cantidad-numero">
                             ${item.cantidad}
                         </span>
+
 
                         <button
                             onclick="cambiarCantidad(${indice}, 1)"
@@ -659,12 +1114,14 @@ function actualizarCarrito() {
 
                     </div>
 
+
                     <p>
                         Subtotal:
                         <strong>
                             $${formatearPrecio(subtotal)}
                         </strong>
                     </p>
+
 
                     <button
                         class="quitar"
@@ -690,12 +1147,14 @@ function actualizarCarrito() {
 
         </div>
 
+
         <button
             class="whatsapp-carrito"
             onclick="enviarPedido()"
         >
             📲 Enviar pedido por WhatsApp
         </button>
+
 
         <button
             class="vaciar"
@@ -708,10 +1167,13 @@ function actualizarCarrito() {
 
 
     contenedor.innerHTML = html;
+
 }
 
 
-/* CAMBIAR CANTIDAD */
+/* =========================
+   CAMBIAR CANTIDAD
+   ========================= */
 
 function cambiarCantidad(
     indice,
@@ -732,11 +1194,15 @@ function cambiarCantidad(
 
     }
 
+
     actualizarCarrito();
+
 }
 
 
-/* ELIMINAR PRODUCTO */
+/* =========================
+   ELIMINAR
+   ========================= */
 
 function quitarProducto(indice) {
 
@@ -745,21 +1211,28 @@ function quitarProducto(indice) {
         1
     );
 
+
     actualizarCarrito();
+
 }
 
 
-/* VACIAR */
+/* =========================
+   VACIAR
+   ========================= */
 
 function vaciarCarrito() {
 
     carrito = [];
 
     actualizarCarrito();
+
 }
 
 
-/* ABRIR CARRITO */
+/* =========================
+   ABRIR CARRITO
+   ========================= */
 
 function abrirCarrito() {
 
@@ -774,7 +1247,9 @@ function abrirCarrito() {
 }
 
 
-/* CERRAR CARRITO */
+/* =========================
+   CERRAR CARRITO
+   ========================= */
 
 function cerrarCarrito(event) {
 
@@ -784,7 +1259,9 @@ function cerrarCarrito(event) {
     ) {
 
         return;
+
     }
+
 
     document
         .getElementById(
@@ -793,10 +1270,13 @@ function cerrarCarrito(event) {
         .classList.remove(
             "activo"
         );
+
 }
 
 
-/* CONVERTIR PRECIO */
+/* =========================
+   CONVERTIR PRECIO
+   ========================= */
 
 function convertirPrecio(precio) {
 
@@ -823,10 +1303,13 @@ function convertirPrecio(precio) {
     return isNaN(numero)
         ? 0
         : numero;
+
 }
 
 
-/* FORMATEAR PRECIO */
+/* =========================
+   FORMATEAR PRECIO
+   ========================= */
 
 function formatearPrecio(numero) {
 
@@ -838,7 +1321,9 @@ function formatearPrecio(numero) {
 }
 
 
-/* MENSAJE */
+/* =========================
+   MENSAJE
+   ========================= */
 
 function mostrarMensaje(texto) {
 
@@ -878,6 +1363,7 @@ async function enviarPedido() {
     if (carrito.length === 0) {
 
         return;
+
     }
 
 
@@ -887,17 +1373,21 @@ async function enviarPedido() {
             await fetch(
                 "/procesar-pedido",
                 {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body:
                         JSON.stringify(
                             carrito
                         )
+
                 }
             );
 
@@ -913,6 +1403,7 @@ async function enviarPedido() {
             );
 
             return;
+
         }
 
 
@@ -961,13 +1452,16 @@ async function enviarPedido() {
             "No se pudo procesar el pedido."
         );
 
+
         console.error(error);
 
     }
 
 }
 
+
 </script>
+
 
 </body>
 
