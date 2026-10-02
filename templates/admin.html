@@ -1,494 +1,606 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
 
-<head>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
+<title>Admin - Marco Sport</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<style>
 
-    <title>Admin - Marco Sport</title>
+    * {
+        box-sizing: border-box;
+    }
 
-    <style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        color: #222;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
+    /* ========================= */
+    /* HEADER */
+    /* ========================= */
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            color: #222;
-        }
+    header {
+        background: #111;
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .menu-admin {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .menu-admin a {
+        color: white;
+        text-decoration: none;
+        background: #333;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .menu-admin a:hover {
+        background: #444;
+    }
+
+    /* ========================= */
+    /* CONTENEDOR */
+    /* ========================= */
+
+    .contenedor {
+        width: 95%;
+        max-width: 1200px;
+        margin: 30px auto;
+    }
+
+    /* ========================= */
+    /* FORMULARIO */
+    /* ========================= */
+
+    .formulario {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+
+    .formulario h2 {
+        margin-top: 0;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 11px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        font-size: 15px;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    button {
+        border: none;
+        padding: 11px 15px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .btn-agregar {
+        background: #111;
+        color: white;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* ========================= */
+    /* PRODUCTOS */
+    /* ========================= */
+
+    .productos {
+        display: grid;
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(280px, 1fr)
+        );
+        gap: 20px;
+    }
+
+    .producto {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 3px 10px rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+        overflow: hidden;
+    }
+
+    .producto img {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        border-radius: 10px;
+        background: #f7f7f7;
+    }
+
+    .producto h3 {
+        margin-bottom: 5px;
+    }
+
+    .precio {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    /* ========================= */
+    /* STOCK */
+    /* ========================= */
+
+    .stock {
+        background: #f5f5f5;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+
+    .stock p {
+        margin: 5px 0;
+    }
+
+    .sin-stock {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    /* ========================= */
+    /* VENTA */
+    /* ========================= */
+
+    .venta {
+        border-top: 1px solid #ddd;
+        padding-top: 15px;
+        margin-top: 15px;
+    }
+
+    .btn-vendido {
+        width: 100%;
+        background: #198754;
+        color: white;
+    }
+
+    /* ========================= */
+    /* BOTONES PRODUCTO */
+    /* ========================= */
+
+    .acciones {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-editar,
+    .btn-eliminar {
+        flex: 1;
+        display: block;
+        text-align: center;
+        padding: 10px 15px;
+        border-radius: 7px;
+        text-decoration: none;
+    }
+
+    .btn-editar {
+        background: #ffc107;
+        color: #111;
+    }
+
+    .btn-eliminar {
+        background: #dc3545;
+        color: white;
+    }
+
+    /* ========================= */
+    /* TALLAS */
+    /* ========================= */
+
+    .tallas-formulario {
+        display: grid;
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(80px, 1fr)
+        );
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .talla-input {
+        background: #f5f5f5;
+        padding: 8px;
+        border-radius: 6px;
+    }
+
+    .talla-input label {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    /* ========================= */
+    /* CELULAR */
+    /* ========================= */
+
+    @media (max-width: 700px) {
 
         header {
-            background: #111;
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            flex-direction: column;
+            align-items: stretch;
+            padding: 15px;
         }
 
         header h1 {
-            margin: 0;
+            text-align: center;
+            font-size: 21px;
         }
 
-        header a {
-            color: white;
-            text-decoration: none;
-            background: #333;
-            padding: 10px 15px;
-            border-radius: 8px;
+        .menu-admin {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .menu-admin a {
+            width: 100%;
+            padding: 12px;
         }
 
         .contenedor {
-            width: 95%;
-            max-width: 1200px;
-            margin: 30px auto;
+            width: 94%;
+            margin: 20px auto;
         }
 
         .formulario {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
+            padding: 18px;
+            margin-bottom: 25px;
         }
 
         .formulario h2 {
-            margin-top: 0;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        button {
-            border: none;
-            padding: 10px 15px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-agregar {
-            background: #111;
-            color: white;
+            font-size: 21px;
         }
 
         .productos {
-            display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(280px, 1fr)
-            );
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 15px;
         }
 
         .producto {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 3px 10px rgba(
-                0,
-                0,
-                0,
-                0.08
-            );
+            padding: 15px;
         }
 
         .producto img {
-            width: 100%;
-            height: 220px;
-            object-fit: contain;
-            border-radius: 10px;
-            background: #f7f7f7;
+            height: 240px;
         }
 
-        .producto h3 {
-            margin-bottom: 5px;
-        }
-
-        .precio {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .stock {
-            background: #f5f5f5;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .stock p {
-            margin: 5px 0;
-        }
-
-        .venta {
-            border-top: 1px solid #ddd;
-            padding-top: 15px;
-            margin-top: 15px;
-        }
-
-        .btn-vendido {
-            width: 100%;
-            background: #198754;
-            color: white;
-        }
-
-        .btn-editar {
-            display: inline-block;
-            background: #ffc107;
-            color: #111;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 7px;
-            margin-top: 10px;
-        }
-
-        .btn-eliminar {
-            display: inline-block;
-            background: #dc3545;
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 7px;
-            margin-top: 10px;
-        }
-
-        .sin-stock {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .tallas-formulario {
-            display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(80px, 1fr)
-            );
+        .acciones {
+            flex-direction: column;
             gap: 8px;
         }
 
-        .talla-input {
-            background: #f5f5f5;
-            padding: 8px;
-            border-radius: 6px;
+        .btn-editar,
+        .btn-eliminar {
+            width: 100%;
         }
 
-        .talla-input label {
-            font-size: 13px;
-            font-weight: bold;
+        .tallas-formulario {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    /* ========================= */
+    /* CELULARES PEQUEÑOS */
+    /* ========================= */
+
+    @media (max-width: 380px) {
+
+        header h1 {
+            font-size: 19px;
         }
 
-    </style>
+        .formulario {
+            padding: 15px;
+        }
 
-</head>
+        .producto img {
+            height: 210px;
+        }
 
-<body>
+        .tallas-formulario {
+            grid-template-columns: repeat(2, 1fr);
+        }
 
-<header>
+    }
 
-    <h1>⚽ Marco Sport - Administración</h1>
+</style>
 
-    <div>
+</head><body><header><h1>⚽ Marco Sport - Administración</h1>
 
-        <a href="/">
-            Ver tienda
-        </a>
+<div class="menu-admin">
 
-        <a href="/configuracion">
-            Configuración
-        </a>
+    <a href="/">
+        🏪 Ver tienda
+    </a>
 
-        <a href="/logout">
-            Cerrar sesión
-        </a>
+    <a href="/configuracion">
+        ⚙️ Configuración
+    </a>
 
-    </div>
+    <a href="/logout">
+        🚪 Cerrar sesión
+    </a>
 
-</header>
+</div>
 
+</header><div class="contenedor"><!-- ============================= -->
+<!-- AGREGAR PRODUCTO -->
+<!-- ============================= -->
 
-<div class="contenedor">
+<div class="formulario">
 
+    <h2>➕ Agregar producto</h2>
 
-    <!-- ============================= -->
-    <!-- AGREGAR PRODUCTO -->
-    <!-- ============================= -->
+    <form
+        action="/agregar"
+        method="POST"
+        enctype="multipart/form-data"
+    >
 
-    <div class="formulario">
+        <label>
+            Modelo
+        </label>
 
-        <h2>➕ Agregar producto</h2>
-
-        <form
-            action="/agregar"
-            method="POST"
-            enctype="multipart/form-data"
+        <input
+            type="text"
+            name="modelo"
+            placeholder="Ej: Adidas Predator"
+            required
         >
 
-            <label>
-                Modelo
-            </label>
+        <label>
+            Precio
+        </label>
 
-            <input
-                type="text"
-                name="modelo"
-                placeholder="Ej: Adidas Predator"
-                required
-            >
+        <input
+            type="text"
+            name="precio"
+            placeholder="Ej: $80.000"
+            required
+        >
+
+        <label>
+            Descripción
+        </label>
+
+        <textarea
+            name="descripcion"
+            placeholder="Descripción del producto..."
+            required
+        ></textarea>
+
+        <label>
+            Foto
+        </label>
+
+        <input
+            type="file"
+            name="foto"
+            accept="image/*"
+            required
+        >
+
+        <h3>
+            Stock por talla
+        </h3>
+
+        <div class="tallas-formulario">
+
+            {% for talla in range(33, 46) %}
+
+                <div class="talla-input">
+
+                    <label>
+                        Talla {{ talla }}
+                    </label>
+
+                    <input
+                        type="number"
+                        name="stock_{{ talla }}"
+                        min="0"
+                        value="0"
+                    >
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn-agregar"
+        >
+            Agregar producto
+        </button>
+
+    </form>
+
+</div>
 
 
-            <label>
-                Precio
-            </label>
+<!-- ============================= -->
+<!-- PRODUCTOS -->
+<!-- ============================= -->
 
-            <input
-                type="text"
-                name="precio"
-                placeholder="Ej: $80.000"
-                required
-            >
+<h2>
+    📦 Productos
+</h2>
 
+<div class="productos">
 
-            <label>
-                Descripción
-            </label>
+    {% for producto in productos %}
 
-            <textarea
-                name="descripcion"
-                placeholder="Descripción del producto..."
-                required
-            ></textarea>
+        <div class="producto">
 
+            {% if producto.foto and producto.foto.startswith('http') %}
 
-            <label>
-                Foto
-            </label>
+                <img
+                    src="{{ producto.foto }}"
+                    alt="{{ producto.modelo }}"
+                >
 
-            <input
-                type="file"
-                name="foto"
-                accept="image/*"
-                required
-            >
+            {% elif producto.foto %}
 
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='uploads/' + producto.foto
+                    ) }}"
+                    alt="{{ producto.modelo }}"
+                >
+
+            {% endif %}
 
             <h3>
-                Stock por talla
+                {{ producto.modelo }}
             </h3>
 
-            <div class="tallas-formulario">
+            <p class="precio">
+                ${{ producto.precio }}
+            </p>
 
-                {% for talla in range(33, 46) %}
+            <p>
+                {{ producto.descripcion }}
+            </p>
 
-                    <div class="talla-input">
+            <div class="stock">
 
-                        <label>
-                            Talla {{ talla }}
-                        </label>
+                <strong>
+                    📦 Stock actual
+                </strong>
 
-                        <input
-                            type="number"
-                            name="stock_{{ talla }}"
-                            min="0"
-                            value="0"
-                        >
+                {% if producto.stock %}
 
-                    </div>
+                    {% for talla, cantidad in producto.stock.items() %}
 
-                {% endfor %}
+                        <p>
+                            Talla {{ talla }}:
+                            <strong>
+                                {{ cantidad }}
+                            </strong>
+                        </p>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p class="sin-stock">
+                        Sin stock
+                    </p>
+
+                {% endif %}
 
             </div>
 
 
-            <button
-                type="submit"
-                class="btn-agregar"
-            >
-                Agregar producto
-            </button>
+            {% if producto.stock %}
 
-        </form>
+                <div class="venta">
 
-    </div>
+                    <h3>
+                        💰 Registrar venta
+                    </h3>
 
-
-    <!-- ============================= -->
-    <!-- PRODUCTOS -->
-    <!-- ============================= -->
-
-    <h2>
-        📦 Productos
-    </h2>
-
-
-    <div class="productos">
-
-        {% for producto in productos %}
-
-            <div class="producto">
-
-
-                <!-- ========================= -->
-                <!-- IMAGEN DEL PRODUCTO -->
-                <!-- ========================= -->
-
-                {% if producto.foto and producto.foto.startswith('http') %}
-
-                    <img
-                        src="{{ producto.foto }}"
-                        alt="{{ producto.modelo }}"
+                    <form
+                        action="/marcar-vendido"
+                        method="POST"
                     >
 
-                {% elif producto.foto %}
+                        <input
+                            type="hidden"
+                            name="indice"
+                            value="{{ loop.index0 }}"
+                        >
 
-                    <img
-                        src="{{ url_for(
-                            'static',
-                            filename='uploads/' + producto.foto
-                        ) }}"
-                        alt="{{ producto.modelo }}"
-                    >
+                        <label>
+                            Talla vendida
+                        </label>
 
-                {% endif %}
+                        <select
+                            name="talla"
+                            required
+                        >
 
+                            {% for talla, cantidad in producto.stock.items() %}
 
-                <h3>
-                    {{ producto.modelo }}
-                </h3>
+                                <option value="{{ talla }}">
+                                    Talla {{ talla }}
+                                    — {{ cantidad }} disponible(s)
+                                </option>
 
+                            {% endfor %}
 
-                <p class="precio">
-                    ${{ producto.precio }}
-                </p>
+                        </select>
 
+                        <label>
+                            Cantidad vendida
+                        </label>
 
-                <p>
-                    {{ producto.descripcion }}
-                </p>
+                        <input
+                            type="number"
+                            name="cantidad"
+                            min="1"
+                            value="1"
+                            required
+                        >
 
+                        <button
+                            type="submit"
+                            class="btn-vendido"
+                        >
+                            ✅ Marcar vendido
+                        </button>
 
-                <!-- STOCK ACTUAL -->
-
-                <div class="stock">
-
-                    <strong>
-                        📦 Stock actual
-                    </strong>
-
-                    {% if producto.stock %}
-
-                        {% for talla, cantidad in producto.stock.items() %}
-
-                            <p>
-                                Talla {{ talla }}:
-                                <strong>
-                                    {{ cantidad }}
-                                </strong>
-                            </p>
-
-                        {% endfor %}
-
-                    {% else %}
-
-                        <p class="sin-stock">
-                            Sin stock
-                        </p>
-
-                    {% endif %}
+                    </form>
 
                 </div>
 
-
-                <!-- ========================= -->
-                <!-- MARCAR VENTA -->
-                <!-- ========================= -->
-
-                {% if producto.stock %}
-
-                    <div class="venta">
-
-                        <h3>
-                            💰 Registrar venta
-                        </h3>
-
-                        <form
-                            action="/marcar-vendido"
-                            method="POST"
-                        >
-
-                            <input
-                                type="hidden"
-                                name="indice"
-                                value="{{ loop.index0 }}"
-                            >
+            {% endif %}
 
 
-                            <label>
-                                Talla vendida
-                            </label>
-
-                            <select
-                                name="talla"
-                                required
-                            >
-
-                                {% for talla, cantidad in producto.stock.items() %}
-
-                                    <option value="{{ talla }}">
-                                        Talla {{ talla }}
-                                        — {{ cantidad }} disponible(s)
-                                    </option>
-
-                                {% endfor %}
-
-                            </select>
-
-
-                            <label>
-                                Cantidad vendida
-                            </label>
-
-                            <input
-                                type="number"
-                                name="cantidad"
-                                min="1"
-                                value="1"
-                                required
-                            >
-
-
-                            <button
-                                type="submit"
-                                class="btn-vendido"
-                            >
-                                ✅ Marcar vendido
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                {% endif %}
-
+            <div class="acciones">
 
                 <a
                     href="/editar/{{ loop.index0 }}"
@@ -496,7 +608,6 @@
                 >
                     ✏️ Editar
                 </a>
-
 
                 <a
                     href="/eliminar/{{ loop.index0 }}"
@@ -510,18 +621,16 @@
 
             </div>
 
-        {% else %}
+        </div>
 
-            <p>
-                No hay productos todavía.
-            </p>
+    {% else %}
 
-        {% endfor %}
+        <p>
+            No hay productos todavía.
+        </p>
 
-    </div>
+    {% endfor %}
 
 </div>
 
-</body>
-
-</html>
+</div></body></html>
