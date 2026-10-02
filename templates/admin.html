@@ -29,25 +29,29 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
     }
 
     header h1 {
         margin: 0;
         font-size: 24px;
+        line-height: 1.3;
     }
 
     .menu-admin {
         display: flex;
+        align-items: center;
+        justify-content: flex-end;
         gap: 10px;
-        flex-wrap: wrap;
+        flex-shrink: 0;
     }
 
     .menu-admin a {
+        display: block;
         color: white;
         text-decoration: none;
         background: #333;
-        padding: 10px 15px;
+        padding: 11px 15px;
         border-radius: 8px;
         text-align: center;
         white-space: nowrap;
@@ -250,32 +254,71 @@
     }
 
     /* ========================= */
-    /* CELULAR */
+    /* TABLET */
     /* ========================= */
 
-    @media (max-width: 700px) {
+    @media (max-width: 900px) {
 
         header {
             flex-direction: column;
             align-items: stretch;
-            padding: 15px;
         }
 
         header h1 {
             text-align: center;
-            font-size: 21px;
         }
 
         .menu-admin {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
             width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
 
         .menu-admin a {
             width: 100%;
+        }
+
+    }
+
+    /* ========================= */
+    /* CELULAR */
+    /* ========================= */
+
+    @media (max-width: 600px) {
+
+        header {
+            padding: 15px;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        /*
+         * IMPORTANTE:
+         * En celular los botones pasan a una
+         * columna completa. Así nunca se montan.
+         */
+
+        .menu-admin {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .menu-admin a {
+            width: 100%;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 12px;
+            margin: 0;
         }
 
         .contenedor {
@@ -318,6 +361,7 @@
         .tallas-formulario {
             grid-template-columns: repeat(3, 1fr);
         }
+
     }
 
     /* ========================= */
@@ -326,8 +370,17 @@
 
     @media (max-width: 380px) {
 
+        header {
+            padding: 12px;
+        }
+
         header h1 {
-            font-size: 19px;
+            font-size: 18px;
+        }
+
+        .menu-admin a {
+            min-height: 46px;
+            font-size: 14px;
         }
 
         .formulario {
@@ -346,7 +399,9 @@
 
 </style>
 
-</head><body><header><h1>⚽ Marco Sport - Administración</h1>
+</head><body><header><h1>
+    ⚽ Marco Sport - Administración
+</h1>
 
 <div class="menu-admin">
 
@@ -370,7 +425,9 @@
 
 <div class="formulario">
 
-    <h2>➕ Agregar producto</h2>
+    <h2>
+        ➕ Agregar producto
+    </h2>
 
     <form
         action="/agregar"
@@ -389,6 +446,7 @@
             required
         >
 
+
         <label>
             Precio
         </label>
@@ -400,6 +458,7 @@
             required
         >
 
+
         <label>
             Descripción
         </label>
@@ -409,6 +468,7 @@
             placeholder="Descripción del producto..."
             required
         ></textarea>
+
 
         <label>
             Foto
@@ -420,6 +480,7 @@
             accept="image/*"
             required
         >
+
 
         <h3>
             Stock por talla
@@ -448,6 +509,7 @@
 
         </div>
 
+
         <button
             type="submit"
             class="btn-agregar"
@@ -468,11 +530,13 @@
     📦 Productos
 </h2>
 
+
 <div class="productos">
 
     {% for producto in productos %}
 
         <div class="producto">
+
 
             {% if producto.foto and producto.foto.startswith('http') %}
 
@@ -493,17 +557,21 @@
 
             {% endif %}
 
+
             <h3>
                 {{ producto.modelo }}
             </h3>
+
 
             <p class="precio">
                 ${{ producto.precio }}
             </p>
 
+
             <p>
                 {{ producto.descripcion }}
             </p>
+
 
             <div class="stock">
 
@@ -554,6 +622,7 @@
                             value="{{ loop.index0 }}"
                         >
 
+
                         <label>
                             Talla vendida
                         </label>
@@ -574,6 +643,7 @@
 
                         </select>
 
+
                         <label>
                             Cantidad vendida
                         </label>
@@ -585,6 +655,7 @@
                             value="1"
                             required
                         >
+
 
                         <button
                             type="submit"
