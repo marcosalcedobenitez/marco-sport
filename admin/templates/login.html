@@ -8,7 +8,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Marco Sport | Crear administrador</title>
+    <title>Marco Sport | Login</title>
 
     <style>
 
@@ -34,13 +34,13 @@
 
         }
 
-        .contenedor {
+        .login {
 
             background: white;
 
             width: 90%;
 
-            max-width: 450px;
+            max-width: 400px;
 
             padding: 35px;
 
@@ -64,7 +64,7 @@
 
             color: #666;
 
-            margin-bottom: 25px;
+            margin-bottom: 30px;
 
         }
 
@@ -118,12 +118,6 @@
 
         }
 
-        button:hover {
-
-            background: #007a36;
-
-        }
-
         .error {
 
             background: #ffe5e5;
@@ -140,18 +134,32 @@
 
         }
 
+        .tienda {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #009944;
+
+            text-decoration: none;
+
+        }
+
     </style>
 
 </head>
 
 <body>
 
-<div class="contenedor">
+<div class="login">
 
     <h1>⚽ Marco Sport</h1>
 
     <p class="subtitulo">
-        Configuración inicial del administrador
+        Panel de administración
     </p>
 
     {% if error %}
@@ -165,35 +173,13 @@
     <form method="POST">
 
         <label>
-            Nombre
-        </label>
-
-        <input
-            type="text"
-            name="nombre"
-            placeholder="Tu nombre"
-            required
-        >
-
-        <label>
-            Número de celular
-        </label>
-
-        <input
-            type="tel"
-            name="telefono"
-            placeholder="+57 300 000 0000"
-            required
-        >
-
-        <label>
             Usuario
         </label>
 
         <input
             type="text"
             name="usuario"
-            placeholder="Usuario para iniciar sesión"
+            placeholder="Usuario"
             required
         >
 
@@ -204,26 +190,22 @@
         <input
             type="password"
             name="password"
-            placeholder="Mínimo 6 caracteres"
-            required
-        >
-
-        <label>
-            Confirmar contraseña
-        </label>
-
-        <input
-            type="password"
-            name="confirmar"
-            placeholder="Repite la contraseña"
+            placeholder="Contraseña"
             required
         >
 
         <button type="submit">
-            🔐 Crear administrador
+            🔐 Entrar
         </button>
 
     </form>
+
+    <a
+        class="tienda"
+        href="/static"
+    >
+        ← Volver a la tienda
+    </a>
 
 </div>
 

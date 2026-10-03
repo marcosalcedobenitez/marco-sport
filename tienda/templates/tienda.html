@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Marco Sport | Guayos</title>
+
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+
+    body {
+        margin: 0;
+
+        font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        background:
+            #f3f6fa;
+
+        color: #111827;
+    }
+
+
+    /* =====================================================
+       COLORES MARCO SPORT
+       ===================================================== */
+
+    :root {
+
+        --azul:
+            #071a33;
+
+        --azul-medio:
+            #0b2d55;
+
+        --azul-claro:
+            #0e4b87;
+
+        --amarillo:
+            #f6b800;
+
+        --amarillo-claro:
+            #ffd54a;
+
+        --blanco:
+            #ffffff;
+
+        --gris:
+            #64748b;
+
+        --fondo:
+            #f3f6fa;
+
+        --verde-cancha:
+            #159447;
+
+    }
+
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
+    header {
+
+        position: relative;
+
+        overflow: hidden;
+
+        background:
+            linear-gradient(
+                135deg,
+                #050d18 0%,
+                #071a33 55%,
+                #0b2d55 100%
+            );
+
+        color: white;
+
+        padding:
+            18px 20px 30px;
+
+        text-align: center;
+
+        box-shadow:
+            0 5px 25px
+            rgba(0,0,0,0.25);
+
+    }
+
+
+    header::before {
+
+        content: "";
+
+        position: absolute;
+
+        width: 420px;
+        height: 420px;
+
+        border:
+            2px solid
+            rgba(255,255,255,0.06);
+
+        border-radius: 50%;
+
+        left: -210px;
+        top: -230px;
+
+    }
+
+
+    header::after {
+
+        content: "";
+
+        position: absolute;
+
+        width: 500px;
+
+        height: 2px;
+
+        background:
+            rgba(246,184,0,0.35);
+
+        right: -100px;
+
+        bottom: 25px;
+
+        transform:
+            rotate(-12deg);
+
+    }
+
+
+    /* =====================================================
+       LOGO
+       ===================================================== */
+
+    .logo-contenedor {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        margin: 0 auto;
+
+    }
+
+
+    .logo-imagen {
+
+        width: 280px;
+
+        max-width: 80vw;
+
+        height: 135px;
+
+        object-fit: contain;
+
+        display: block;
+
+    }
+
+
+    .subtitulo {
+
+        position: relative;
+
+        z-index: 2;
+
+        margin:
+            2px 0 0;
+
+        color:
+            #d8e4f2;
+
+        font-size:
+            15px;
+
+        font-weight:
+            500;
+
+        letter-spacing:
+            0.4px;
+
+    }
+
+
+    .linea-dorada {
+
+        position: relative;
+
+        z-index: 2;
+
+        width: 70px;
+
+        height: 4px;
+
+        background:
+            var(--amarillo);
+
+        border-radius:
+            10px;
+
+        margin:
+            12px auto 0;
+
+    }
+
+
+    /* =====================================================
+       BARRA DE SECCIÓN
+       ===================================================== */
+
+    .barra-tienda {
+
+        max-width:
+            1200px;
+
+        margin:
+            25px auto 0;
+
+        padding:
+            0 18px;
+
+    }
+
+
+    .titulo-tienda {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        gap:
+            10px;
+
+        margin:
+            0 0 5px;
+
+        color:
+            var(--azul);
+
+        font-size:
+            27px;
+
+        font-weight:
+            800;
+
+    }
+
+
+    .titulo-tienda::before {
+
+        content:
+            "";
+
+        width:
+            7px;
+
+        height:
+            30px;
+
+        background:
+            var(--amarillo);
+
+        border-radius:
+            5px;
+
+    }
+
+
+    .texto-tienda {
+
+        margin:
+            0;
+
+        color:
+            var(--gris);
+
+        font-size:
+            14px;
+
+    }
+
+
+    /* =====================================================
+       CONTENEDOR
+       ===================================================== */
+
+    .contenedor {
+
+        max-width:
+            1200px;
+
+        margin:
+            0 auto;
+
+        padding:
+            25px 18px 120px;
+
+    }
+
+
+    /* =====================================================
+       PRODUCTOS
+       ===================================================== */
+
+    .productos {
+
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap:
+            24px;
+
+    }
+
+
+    .producto {
+
+        position:
+            relative;
+
+        background:
+            var(--blanco);
+
+        border-radius:
+            18px;
+
+        overflow:
+            hidden;
+
+        border:
+            1px solid
+            #e2e8f0;
+
+        box-shadow:
+            0 5px 18px
+            rgba(7,26,51,0.08);
+
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s;
+
+    }
+
+
+    .producto::before {
+
+        content:
+            "";
+
+        display:
+            block;
+
+        height:
+            5px;
+
+        background:
+            linear-gradient(
+                90deg,
+                var(--amarillo),
+                var(--amarillo-claro)
+            );
+
+    }
+
+
+    .producto:hover {
+
+        transform:
+            translateY(-5px);
+
+        box-shadow:
+            0 12px 30px
+            rgba(7,26,51,0.15);
+
+    }
+
+
+    /* =====================================================
+       IMAGEN
+       ===================================================== */
+
+    .imagen-producto {
+
+        width:
+            100%;
+
+        height:
+            280px;
+
+        object-fit:
+            cover;
+
+        display:
+            block;
+
+        background:
+            #eef2f7;
+
+    }
+
+
+    /* =====================================================
+       CONTENIDO
+       ===================================================== */
+
+    .contenido {
+
+        padding:
+            20px;
+
+    }
+
+
+    .contenido h2 {
+
+        margin:
+            0 0 8px;
+
+        color:
+            var(--azul);
+
+        font-size:
+            22px;
+
+        line-height:
+            1.2;
+
+    }
+
+
+    .precio {
+
+        margin:
+            0 0 12px;
+
+        color:
+            var(--azul-claro);
+
+        font-size:
+            25px;
+
+        font-weight:
+            900;
+
+    }
+
+
+    .descripcion {
+
+        color:
+            var(--gris);
+
+        font-size:
+            14px;
+
+        line-height:
+            1.5;
+
+        min-height:
+            42px;
+
+        margin-bottom:
+            18px;
+
+    }
+
+
+    /* =====================================================
+       TALLAS
+       ===================================================== */
+
+    .selector-talla {
+
+        margin-top:
+            10px;
+
+    }
+
+
+    .selector-talla label {
+
+        display:
+            block;
+
+        color:
+            var(--azul);
+
+        font-size:
+            14px;
+
+        font-weight:
+            800;
+
+        margin-bottom:
+            7px;
+
+    }
+
+
+    .selector-talla select {
+
+        width:
+            100%;
+
+        padding:
+            13px 12px;
+
+        border:
+            2px solid
+            #dce3eb;
+
+        border-radius:
+            10px;
+
+        background:
+            white;
+
+        color:
+            #172033;
+
+        font-size:
+            16px;
+
+        outline:
+            none;
+
+        cursor:
+            pointer;
+
+        transition:
+            0.2s;
+
+    }
+
+
+    .selector-talla select:focus {
+
+        border-color:
+            var(--azul-claro);
+
+        box-shadow:
+            0 0 0 3px
+            rgba(14,75,135,0.10);
+
+    }
+
+
+    /* =====================================================
+       BOTÓN CARRITO
+       ===================================================== */
+
+    .agregar-carrito {
+
+        width:
+            100%;
+
+        background:
+            var(--azul);
+
+        color:
+            white;
+
+        border:
+            none;
+
+        padding:
+            14px;
+
+        border-radius:
+            10px;
+
+        margin-top:
+            11px;
+
+        font-weight:
+            800;
+
+        font-size:
+            15px;
+
+        cursor:
+            pointer;
+
+        transition:
+            0.2s;
+
+    }
+
+
+    .agregar-carrito:hover {
+
+        background:
+            var(--azul-claro);
+
+        transform:
+            translateY(-1px);
+
+    }
+
+
+    .agregar-carrito:active {
+
+        transform:
+            scale(0.98);
+
+    }
+
+
+    /* =====================================================
+       AGOTADO
+       ===================================================== */
+
+    .agotado {
+
+        display:
+            block;
+
+        background:
+            #e8edf2;
+
+        color:
+            #64748b;
+
+        text-align:
+            center;
+
+        padding:
+            13px;
+
+        border-radius:
+            10px;
+
+        margin-top:
+            15px;
+
+        font-weight:
+            bold;
+
+    }
+
+
+    /* =====================================================
+       SIN PRODUCTOS
+       ===================================================== */
+
+    .sin-productos {
+
+        text-align:
+            center;
+
+        padding:
+            65px 25px;
+
+        background:
+            white;
+
+        border-radius:
+            18px;
+
+        border:
+            1px solid
+            #e2e8f0;
+
+        box-shadow:
+            0 5px 18px
+            rgba(7,26,51,0.06);
+
+    }
+
+
+    .sin-productos h2 {
+
+        margin-top:
+            0;
+
+        color:
+            var(--azul);
+
+    }
+
+
+    .sin-productos p {
+
+        color:
+            var(--gris);
+
+    }
+
+
+    /* =====================================================
+       BOTÓN CARRITO FLOTANTE
+       ===================================================== */
+
+    .carrito-boton {
+
+        position:
+            fixed;
+
+        right:
+            20px;
+
+        bottom:
+            20px;
+
+        background:
+            var(--amarillo);
+
+        color:
+            #111827;
+
+        border:
+            none;
+
+        padding:
+            14px 21px;
+
+        border-radius:
+            30px;
+
+        font-size:
+            15px;
+
+        font-weight:
+            900;
+
+        cursor:
+            pointer;
+
+        z-index:
+            1000;
+
+        box-shadow:
+            0 7px 25px
+            rgba(0,0,0,0.28);
+
+        transition:
+            0.2s;
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        gap:
+            8px;
+
+    }
+
+
+    .carrito-boton:hover {
+
+        transform:
+            translateY(-3px);
+
+        background:
+            var(--amarillo-claro);
+
+    }
+
+
+    .icono-carrito {
+
+        width:
+            20px;
+
+        height:
+            20px;
+
+        display:
+            block;
+
+    }
+
+
+    .numero-carrito {
+
+        min-width:
+            20px;
+
+        height:
+            20px;
+
+        padding:
+            0 5px;
+
+        display:
+            inline-flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        background:
+            var(--azul);
+
+        color:
+            white;
+
+        border-radius:
+            50%;
+
+        font-size:
+            12px;
+
+        font-weight:
+            900;
+
+    }
+
+
+    /* =====================================================
+       FONDO CARRITO
+       ===================================================== */
+
+    .carrito-fondo {
+
+        display:
+            none;
+
+        position:
+            fixed;
+
+        inset:
+            0;
+
+        background:
+            rgba(2,10,20,0.70);
+
+        z-index:
+            2000;
+
+    }
+
+
+    .carrito-fondo.activo {
+
+        display:
+            block;
+
+    }
+
+
+    /* =====================================================
+       CARRITO
+       ===================================================== */
+
+    .carrito {
+
+        position:
+            absolute;
+
+        right:
+            0;
+
+        top:
+            0;
+
+        height:
+            100%;
+
+        width:
+            430px;
+
+        max-width:
+            100%;
+
+        background:
+            #f8fafc;
+
+        padding:
+            24px;
+
+        overflow-y:
+            auto;
+
+        box-shadow:
+            -7px 0 30px
+            rgba(0,0,0,0.20);
+
+    }
+
+
+    .carrito-cabecera {
+
+        display:
+            flex;
+
+        justify-content:
+            space-between;
+
+        align-items:
+            center;
+
+        border-bottom:
+            1px solid
+            #dbe3ec;
+
+        padding-bottom:
+            15px;
+
+        margin-bottom:
+            10px;
+
+    }
+
+
+    .carrito-cabecera h2 {
+
+        margin:
+            0;
+
+        color:
+            var(--azul);
+
+        font-size:
+            22px;
+
+    }
+
+
+    .cerrar-carrito {
+
+        border:
+            none;
+
+        background:
+            #e5eaf0;
+
+        color:
+            var(--azul);
+
+        border-radius:
+            50%;
+
+        width:
+            38px;
+
+        height:
+            38px;
+
+        cursor:
+            pointer;
+
+        font-size:
+            18px;
+
+        font-weight:
+            bold;
+
+        transition:
+            0.2s;
+
+    }
+
+
+    .cerrar-carrito:hover {
+
+        background:
+            var(--amarillo);
+
+    }
+
+
+    /* =====================================================
+       ITEMS
+       ===================================================== */
+
+    .item-carrito {
+
+        background:
+            white;
+
+        border:
+            1px solid
+            #e1e7ee;
+
+        border-radius:
+            12px;
+
+        padding:
+            17px;
+
+        margin:
+            12px 0;
+
+    }
+
+
+    .item-carrito h3 {
+
+        margin:
+            0 0 7px;
+
+        color:
+            var(--azul);
+
+        font-size:
+            18px;
+
+    }
+
+
+    .item-carrito p {
+
+        margin:
+            5px 0;
+
+        color:
+            #555;
+
+        font-size:
+            14px;
+
+    }
+
+
+    .controles-cantidad {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        gap:
+            10px;
+
+        margin-top:
+            12px;
+
+    }
+
+
+    .controles-cantidad button {
+
+        width:
+            36px;
+
+        height:
+            36px;
+
+        border:
+            none;
+
+        border-radius:
+            8px;
+
+        background:
+            var(--azul);
+
+        color:
+            white;
+
+        font-size:
+            19px;
+
+        cursor:
+            pointer;
+
+    }
+
+
+    .cantidad-numero {
+
+        font-weight:
+            bold;
+
+        min-width:
+            25px;
+
+        text-align:
+            center;
+
+    }
+
+
+    .quitar {
+
+        background:
+            #dc2626;
+
+        color:
+            white;
+
+        border:
+            none;
+
+        padding:
+            9px 12px;
+
+        border-radius:
+            8px;
+
+        cursor:
+            pointer;
+
+        margin-top:
+            10px;
+
+        font-weight:
+            bold;
+
+    }
+
+
+    /* =====================================================
+       TOTAL
+       ===================================================== */
+
+    .carrito-total {
+
+        margin-top:
+            25px;
+
+        padding:
+            15px;
+
+        background:
+            var(--azul);
+
+        color:
+            white;
+
+        border-radius:
+            12px;
+
+        font-size:
+            23px;
+
+        font-weight:
+            900;
+
+    }
+
+
+    /* =====================================================
+       WHATSAPP
+       ===================================================== */
+
+    .whatsapp-carrito {
+
+        display:
+            block;
+
+        width:
+            100%;
+
+        background:
+            #25D366;
+
+        color:
+            white;
+
+        text-align:
+            center;
+
+        border:
+            none;
+
+        padding:
+            15px;
+
+        border-radius:
+            10px;
+
+        margin-top:
+            17px;
+
+        font-weight:
+            bold;
+
+        cursor:
+            pointer;
+
+        font-size:
+            16px;
+
+        transition:
+            0.2s;
+
+    }
+
+
+    .whatsapp-carrito:hover {
+
+        background:
+            #20bd5b;
+
+        transform:
+            translateY(-1px);
+
+    }
+
+
+    /* =====================================================
+       VACIAR
+       ===================================================== */
+
+    .vaciar {
+
+        display:
+            block;
+
+        width:
+            100%;
+
+        background:
+            #e9edf2;
+
+        color:
+            #c00;
+
+        border:
+            none;
+
+        padding:
+            13px;
+
+        border-radius:
+            10px;
+
+        margin-top:
+            10px;
+
+        cursor:
+            pointer;
+
+        font-weight:
+            bold;
+
+    }
+
+
+    /* =====================================================
+       MENSAJE
+       ===================================================== */
+
+    .mensaje {
+
+        position:
+            fixed;
+
+        top:
+            20px;
+
+        left:
+            50%;
+
+        transform:
+            translateX(-50%);
+
+        background:
+            var(--azul);
+
+        color:
+            white;
+
+        padding:
+            13px 20px;
+
+        border:
+            2px solid
+            var(--amarillo);
+
+        border-radius:
+            10px;
+
+        display:
+            none;
+
+        z-index:
+            3000;
+
+        box-shadow:
+            0 7px 25px
+            rgba(0,0,0,0.25);
+
+        font-size:
+            14px;
+
+        font-weight:
+            bold;
+
+        white-space:
+            nowrap;
+
+    }
+
+
+    /* =====================================================
+       TABLET
+       ===================================================== */
+
+    @media (max-width: 900px) {
+
+        .productos {
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+        }
+
+
+        .imagen-producto {
+
+            height:
+                250px;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CELULAR
+       ===================================================== */
+
+    @media (max-width: 600px) {
+
+        header {
+
+            padding:
+                12px 15px 25px;
+
+        }
+
+
+        .logo-imagen {
+
+            width:
+                250px;
+
+            height:
+                125px;
+
+        }
+
+
+        .subtitulo {
+
+            font-size:
+                13px;
+
+        }
+
+
+        .barra-tienda {
+
+            margin-top:
+                20px;
+
+            padding:
+                0 12px;
+
+        }
+
+
+        .titulo-tienda {
+
+            font-size:
+                23px;
+
+        }
+
+
+        .titulo-tienda::before {
+
+            height:
+                26px;
+
+        }
+
+
+        .contenedor {
+
+            padding:
+                18px 12px 100px;
+
+        }
+
+
+        .productos {
+
+            grid-template-columns:
+                1fr;
+
+            gap:
+                18px;
+
+        }
+
+
+        .producto {
+
+            border-radius:
+                15px;
+
+        }
+
+
+        .imagen-producto {
+
+            height:
+                270px;
+
+        }
+
+
+        .contenido {
+
+            padding:
+                17px;
+
+        }
+
+
+        .contenido h2 {
+
+            font-size:
+                21px;
+
+        }
+
+
+        .precio {
+
+            font-size:
+                23px;
+
+        }
+
+
+        .selector-talla select {
+
+            padding:
+                14px 12px;
+
+        }
+
+
+        .agregar-carrito {
+
+            padding:
+                15px;
+
+        }
+
+
+        .carrito-boton {
+
+            right:
+                14px;
+
+            bottom:
+                14px;
+
+            padding:
+                13px 17px;
+
+            font-size:
+                14px;
+
+        }
+
+
+        .carrito {
+
+            width:
+                100%;
+
+            padding:
+                20px 17px;
+
+        }
+
+
+        .mensaje {
+
+            top:
+                15px;
+
+            max-width:
+                calc(100% - 30px);
+
+            text-align:
+                center;
+
+            white-space:
+                normal;
+
+            width:
+                max-content;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CELULARES PEQUEÑOS
+       ===================================================== */
+
+    @media (max-width: 380px) {
+
+        .logo-imagen {
+
+            width:
+                220px;
+
+            height:
+                110px;
+
+        }
+
+
+        .titulo-tienda {
+
+            font-size:
+                21px;
+
+        }
+
+
+        .imagen-producto {
+
+            height:
+                240px;
+
+        }
+
+
+        .contenido {
+
+            padding:
+                15px;
+
+        }
+
+
+        .carrito-boton {
+
+            font-size:
+                13px;
+
+            padding:
+                12px 15px;
+
+        }
+
+    }
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header>
+
+    <div class="logo-contenedor">
+
+        <img
+            src="{{ url_for('static', filename='logo.png') }}"
+            alt="Marco Sport"
+            class="logo-imagen"
+        >
+
+    </div>
+
+
+    <p class="subtitulo">
+        Guayos para llevar tu juego al siguiente nivel ⚽
+    </p>
+
+
+    <div class="linea-dorada"></div>
+
+</header>
+
+
+<!-- =========================================================
+     TITULO
+     ========================================================= -->
+
+<div class="barra-tienda">
+
+    <h1 class="titulo-tienda">
+        Guayos disponibles
+    </h1>
+
+
+    <p class="texto-tienda">
+        Encuentra tu próximo par y juega con estilo.
+    </p>
+
+</div>
+
+
+<!-- =========================================================
+     PRODUCTOS
+     ========================================================= -->
+
+<div class="contenedor">
+
+{% if productos %}
+
+    <div class="productos">
+
+        {% for producto in productos %}
+
+            <div class="producto">
+
+
+                <!-- =================================================
+                     IMAGEN
+                     ================================================= -->
+
+                {% if producto.foto and producto.foto.startswith('http') %}
+
+                    <img
+                        class="imagen-producto"
+                        src="{{ producto.foto }}"
+                        alt="{{ producto.modelo }}"
+                        loading="lazy"
+                    >
+
+                {% elif producto.foto %}
+
+                    <img
+                        class="imagen-producto"
+                        src="{{ url_for('static', filename='uploads/' + producto.foto) }}"
+                        alt="{{ producto.modelo }}"
+                        loading="lazy"
+                    >
+
+                {% else %}
+
+                    <div
+                        class="imagen-producto"
+                        style="
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            color:#64748b;
+                            font-weight:bold;
+                        "
+                    >
+                        Sin imagen
+                    </div>
+
+                {% endif %}
+
+
+                <div class="contenido">
+
+
+                    <h2>
+                        {{ producto.modelo }}
+                    </h2>
+
+
+                    <p class="precio">
+                        ${{ producto.precio }}
+                    </p>
+
+
+                    <p class="descripcion">
+                        {{ producto.descripcion }}
+                    </p>
+
+
+                    <!-- =================================================
+                         COMPROBAR SI HAY ALGUNA TALLA DISPONIBLE
+                         ================================================= -->
+
+                    {% set ns = namespace(disponible=false) %}
+
+                    {% if producto.stock %}
+
+                        {% for talla, cantidad in producto.stock.items() %}
+
+                            {% if cantidad|int > 0 %}
+
+                                {% set ns.disponible = true %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    {% if ns.disponible %}
+
+
+                        <!-- =================================================
+                             SELECTOR DE TALLAS
+                             ================================================= -->
+
+                        <div class="selector-talla">
+
+                            <label>
+                                Selecciona tu talla
+                            </label>
+
+
+                            <select
+                                id="talla-{{ loop.index }}"
+                            >
+
+                                {% for talla, cantidad in producto.stock.items() %}
+
+                                    {% if cantidad|int > 0 %}
+
+                                        <option value="{{ talla }}">
+
+                                            Talla {{ talla }}
+                                            —
+                                            {{ cantidad }}
+                                            disponible(s)
+
+                                        </option>
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             AGREGAR AL CARRITO
+                             ================================================= -->
+
+                        <button
+                            class="agregar-carrito"
+                            onclick="agregarAlCarrito(
+                                '{{ producto.modelo|e }}',
+                                '{{ producto.precio|e }}',
+                                'talla-{{ loop.index }}'
+                            )"
+                        >
+
+                            Agregar al carrito
+
+                        </button>
+
+
+                    {% else %}
+
+
+                        <!-- =================================================
+                             AGOTADO
+                             ================================================= -->
+
+                        <span class="agotado">
+
+                            Agotado
+
+                        </span>
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+{% else %}
+
+
+    <div class="sin-productos">
+
+        <h2>
+            No hay guayos todavía
+        </h2>
+
+
+        <p>
+            Pronto tendremos nuevos modelos disponibles.
+        </p>
+
+    </div>
+
+
+{% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     BOTÓN CARRITO FLOTANTE
+     ========================================================= -->
+
+<button
+    class="carrito-boton"
+    onclick="abrirCarrito()"
+>
+
+    <svg
+        class="icono-carrito"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+
+        <circle
+            cx="9"
+            cy="20"
+            r="1"
+        ></circle>
+
+        <circle
+            cx="19"
+            cy="20"
+            r="1"
+        ></circle>
+
+        <path
+            d="M3 4h2l2.4 11.5a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.5L21 8H6"
+        ></path>
+
+    </svg>
+
+
+    <span>
+        Carrito
+    </span>
+
+
+    <span
+        id="cantidad-carrito"
+        class="numero-carrito"
+    >
+        0
+    </span>
+
+</button>
+
+
+<!-- =========================================================
+     CARRITO
+     ========================================================= -->
+
+<div
+    id="carrito-fondo"
+    class="carrito-fondo"
+    onclick="cerrarCarrito(event)"
+>
+
+    <div
+        class="carrito"
+        onclick="event.stopPropagation()"
+    >
+
+
+        <div class="carrito-cabecera">
+
+            <h2>
+                Tu carrito
+            </h2>
+
+
+            <button
+                class="cerrar-carrito"
+                onclick="cerrarCarrito()"
+            >
+
+                ✕
+
+            </button>
+
+        </div>
+
+
+        <div id="contenido-carrito">
+
+            <p>
+                Tu carrito está vacío.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MENSAJE
+     ========================================================= -->
+
+<div
+    id="mensaje"
+    class="mensaje"
+></div>
+
+
+<script>
+
+
+let carrito = [];
+
+
+
+/* =========================================================
+   AGREGAR AL CARRITO
+   ========================================================= */
+
+function agregarAlCarrito(
+    modelo,
+    precio,
+    idTalla
+) {
+
+
+    const selector =
+        document.getElementById(idTalla);
+
+
+    const talla =
+        selector.value;
+
+
+    const existente =
+        carrito.find(
+            item =>
+                item.modelo === modelo &&
+                item.talla === talla
+        );
+
+
+    if (existente) {
+
+        existente.cantidad += 1;
+
+    } else {
+
+        carrito.push({
+
+            modelo: modelo,
+
+            precio: precio,
+
+            talla: talla,
+
+            cantidad: 1
+
+        });
+
+    }
+
+
+    actualizarCarrito();
+
+
+    mostrarMensaje(
+        "Guayo agregado al carrito"
+    );
+
+}
+
+
+
+/* =========================================================
+   ACTUALIZAR CARRITO
+   ========================================================= */
+
+function actualizarCarrito() {
+
+
+    const contenedor =
+        document.getElementById(
+            "contenido-carrito"
+        );
+
+
+    const cantidad =
+        document.getElementById(
+            "cantidad-carrito"
+        );
+
+
+    cantidad.textContent =
+        carrito.reduce(
+            (total, item) =>
+                total + item.cantidad,
+            0
+        );
+
+
+    if (carrito.length === 0) {
+
+        contenedor.innerHTML =
+            "<p>Tu carrito está vacío.</p>";
+
+        return;
+
+    }
+
+
+    let html = "";
+
+    let total = 0;
+
+
+    carrito.forEach(
+        (item, indice) => {
+
+
+            const precioNumero =
+                convertirPrecio(
+                    item.precio
+                );
+
+
+            const subtotal =
+                precioNumero *
+                item.cantidad;
+
+
+            total += subtotal;
+
+
+            html += `
+
+                <div class="item-carrito">
+
+                    <h3>
+                        ${item.modelo}
+                    </h3>
+
+
+                    <p>
+                        Talla: ${item.talla}
+                    </p>
+
+
+                    <p>
+                        Precio:
+                        $${formatearPrecio(precioNumero)}
+                    </p>
+
+
+                    <div class="controles-cantidad">
+
+
+                        <button
+                            onclick="cambiarCantidad(${indice}, -1)"
+                        >
+                            −
+                        </button>
+
+
+                        <span class="cantidad-numero">
+                            ${item.cantidad}
+                        </span>
+
+
+                        <button
+                            onclick="cambiarCantidad(${indice}, 1)"
+                        >
+                            +
+                        </button>
+
+
+                    </div>
+
+
+                    <p>
+
+                        Subtotal:
+
+                        <strong>
+                            $${formatearPrecio(subtotal)}
+                        </strong>
+
+                    </p>
+
+
+                    <button
+                        class="quitar"
+                        onclick="quitarProducto(${indice})"
+                    >
+
+                        Eliminar
+
+                    </button>
+
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+        <div class="carrito-total">
+
+            Total:
+            $${formatearPrecio(total)}
+
+        </div>
+
+
+        <button
+            class="whatsapp-carrito"
+            onclick="enviarPedido()"
+        >
+
+            Enviar pedido por WhatsApp
+
+        </button>
+
+
+        <button
+            class="vaciar"
+            onclick="vaciarCarrito()"
+        >
+
+            Vaciar carrito
+
+        </button>
+
+    `;
+
+
+    contenedor.innerHTML =
+        html;
+
+}
+
+
+
+/* =========================================================
+   CAMBIAR CANTIDAD
+   ========================================================= */
+
+function cambiarCantidad(
+    indice,
+    cambio
+) {
+
+
+    carrito[indice].cantidad +=
+        cambio;
+
+
+    if (
+        carrito[indice].cantidad <= 0
+    ) {
+
+        carrito.splice(
+            indice,
+            1
+        );
+
+    }
+
+
+    actualizarCarrito();
+
+}
+
+
+
+/* =========================================================
+   ELIMINAR
+   ========================================================= */
+
+function quitarProducto(indice) {
+
+
+    carrito.splice(
+        indice,
+        1
+    );
+
+
+    actualizarCarrito();
+
+}
+
+
+
+/* =========================================================
+   VACIAR
+   ========================================================= */
+
+function vaciarCarrito() {
+
+
+    carrito = [];
+
+
+    actualizarCarrito();
+
+}
+
+
+
+/* =========================================================
+   ABRIR CARRITO
+   ========================================================= */
+
+function abrirCarrito() {
+
+
+    document
+        .getElementById(
+            "carrito-fondo"
+        )
+        .classList.add(
+            "activo"
+        );
+
+}
+
+
+
+/* =========================================================
+   CERRAR CARRITO
+   ========================================================= */
+
+function cerrarCarrito(event) {
+
+
+    if (
+        event &&
+        event.target !== event.currentTarget
+    ) {
+
+        return;
+
+    }
+
+
+    document
+        .getElementById(
+            "carrito-fondo"
+        )
+        .classList.remove(
+            "activo"
+        );
+
+}
+
+
+
+/* =========================================================
+   CONVERTIR PRECIO
+   ========================================================= */
+
+function convertirPrecio(precio) {
+
+
+    if (
+        typeof precio === "number"
+    ) {
+
+        return precio;
+
+    }
+
+
+    let limpio =
+        String(precio)
+            .replace(/\$/g, "")
+            .replace(/\./g, "")
+            .replace(/,/g, "");
+
+
+    const numero =
+        Number(limpio);
+
+
+    return isNaN(numero)
+        ? 0
+        : numero;
+
+}
+
+
+
+/* =========================================================
+   FORMATEAR PRECIO
+   ========================================================= */
+
+function formatearPrecio(numero) {
+
+
+    return Number(numero)
+        .toLocaleString(
+            "es-CO"
+        );
+
+}
+
+
+
+/* =========================================================
+   MENSAJE
+   ========================================================= */
+
+function mostrarMensaje(texto) {
+
+
+    const mensaje =
+        document.getElementById(
+            "mensaje"
+        );
+
+
+    mensaje.textContent =
+        texto;
+
+
+    mensaje.style.display =
+        "block";
+
+
+    setTimeout(
+        () => {
+
+            mensaje.style.display =
+                "none";
+
+        },
+        2000
+    );
+
+}
+
+
+
+/* =========================================================
+   WHATSAPP
+   ========================================================= */
+
+async function enviarPedido() {
+
+
+    if (carrito.length === 0) {
+
+        return;
+
+    }
+
+
+    try {
+
+
+        const respuesta =
+            await fetch(
+                "/procesar-pedido",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            carrito
+                        )
+
+                }
+            );
+
+
+        const resultado =
+            await respuesta.json();
+
+
+        if (!resultado.ok) {
+
+            alert(
+                resultado.mensaje
+            );
+
+            return;
+
+        }
+
+
+        let mensaje =
+            "Hola, quiero hacer este pedido en Marco Sport:%0A%0A";
+
+
+        carrito.forEach(
+            item => {
+
+                mensaje +=
+                    `⚽ ${item.modelo}%0A` +
+                    `Talla: ${item.talla}%0A` +
+                    `Cantidad: ${item.cantidad}%0A` +
+                    `Precio: $${item.precio}%0A%0A`;
+
+            }
+        );
+
+
+        const numeroWhatsApp =
+            "573147611049";
+
+
+        const enlaceWhatsApp =
+            "https://wa.me/" +
+            numeroWhatsApp +
+            "?text=" +
+            mensaje;
+
+
+        window.open(
+            enlaceWhatsApp,
+            "_blank"
+        );
+
+
+        carrito = [];
+
+
+        actualizarCarrito();
+
+
+    } catch (error) {
+
+
+        alert(
+            "No se pudo procesar el pedido."
+        );
+
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
