@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ producto.modelo }} - Marco Sport
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f6f8;
+
+            color: #111;
+        }
+
+
+        /* =====================================
+           HEADER
+        ===================================== */
+
+        header {
+
+            background: #111;
+
+            color: white;
+
+            padding: 18px 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+        }
+
+
+        .logo {
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 24px;
+
+            font-weight: bold;
+        }
+
+
+        .carrito-flotante {
+
+            background: white;
+
+            color: #111;
+
+            border: none;
+
+            border-radius: 25px;
+
+            padding: 10px 16px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        /* =====================================
+           CONTENEDOR
+        ===================================== */
+
+        main {
+
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding: 25px 18px 50px;
+        }
+
+
+        .volver {
+
+            display: inline-block;
+
+            margin-bottom: 20px;
+
+            color: #111;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+
+        .producto-detalle {
+
+            background: white;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 4px 18px
+                rgba(0, 0, 0, 0.08);
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+        }
+
+
+        /* =====================================
+           IMAGEN GRANDE
+        ===================================== */
+
+        .imagen-detalle {
+
+            min-height: 500px;
+
+            background: #f1f3f5;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+        }
+
+
+        .imagen-detalle img {
+
+            width: 100%;
+
+            height: 500px;
+
+            object-fit: contain;
+
+            display: block;
+        }
+
+
+        /* =====================================
+           INFORMACIÓN
+        ===================================== */
+
+        .informacion-detalle {
+
+            padding: 35px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+        }
+
+
+        .informacion-detalle h1 {
+
+            margin: 0 0 15px;
+
+            font-size: 34px;
+        }
+
+
+        .precio-detalle {
+
+            font-size: 30px;
+
+            font-weight: bold;
+
+            margin-bottom: 25px;
+        }
+
+
+        .titulo-info {
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+            font-size: 16px;
+        }
+
+
+        .descripcion-detalle {
+
+            color: #555;
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+
+            white-space: pre-line;
+        }
+
+
+        /* =====================================
+           TALLAS
+        ===================================== */
+
+        .selector-detalle {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 9px;
+
+            background: white;
+
+            font-size: 15px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .boton-agregar {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #111;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .boton-agregar:hover {
+
+            background: #333;
+        }
+
+
+        .agotado {
+
+            color: #c62828;
+
+            font-weight: bold;
+
+            font-size: 18px;
+        }
+
+
+        /* =====================================
+           CARRITO
+        ===================================== */
+
+        .fondo-carrito {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, 0.55);
+
+            z-index: 200;
+        }
+
+
+        .fondo-carrito.activo {
+
+            display: block;
+        }
+
+
+        .carrito-panel {
+
+            position: fixed;
+
+            top: 0;
+
+            right: -430px;
+
+            width: min(430px, 100%);
+
+            height: 100vh;
+
+            background: white;
+
+            z-index: 201;
+
+            transition: right 0.3s ease;
+
+            padding: 20px;
+
+            overflow-y: auto;
+        }
+
+
+        .carrito-panel.activo {
+
+            right: 0;
+        }
+
+
+        .cabecera-carrito {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .cabecera-carrito h2 {
+
+            margin: 0;
+        }
+
+
+        .cerrar-carrito {
+
+            border: none;
+
+            background: #eee;
+
+            border-radius: 50%;
+
+            width: 35px;
+
+            height: 35px;
+
+            cursor: pointer;
+
+            font-size: 18px;
+        }
+
+
+        .item-carrito {
+
+            border-bottom: 1px solid #ddd;
+
+            padding: 12px 0;
+        }
+
+
+        .item-carrito strong {
+
+            display: block;
+
+            margin-bottom: 5px;
+        }
+
+
+        .controles-cantidad {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-top: 8px;
+        }
+
+
+        .controles-cantidad button {
+
+            width: 30px;
+
+            height: 30px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #eee;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .total-carrito {
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            margin-top: 20px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .boton-whatsapp {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #25d366;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .carrito-vacio {
+
+            text-align: center;
+
+            color: #777;
+
+            padding: 40px 10px;
+        }
+
+
+        /* =====================================
+           CELULAR
+        ===================================== */
+
+        @media (max-width: 750px) {
+
+            header {
+
+                padding: 14px 12px;
+            }
+
+
+            .logo {
+
+                font-size: 21px;
+            }
+
+
+            .carrito-flotante {
+
+                padding: 8px 11px;
+
+                font-size: 13px;
+            }
+
+
+            main {
+
+                padding:
+                    18px 10px 35px;
+            }
+
+
+            .producto-detalle {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .imagen-detalle {
+
+                min-height: 330px;
+
+                padding: 12px;
+            }
+
+
+            .imagen-detalle img {
+
+                height: 330px;
+            }
+
+
+            .informacion-detalle {
+
+                padding: 22px 16px;
+            }
+
+
+            .informacion-detalle h1 {
+
+                font-size: 25px;
+            }
+
+
+            .precio-detalle {
+
+                font-size: 24px;
+
+                margin-bottom: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+
+    <a
+        href="{{ url_for('tienda.inicio') }}"
+        class="logo"
+    >
+
+        ⚽ Marco Sport
+
+    </a>
+
+
+    <button
+        class="carrito-flotante"
+        onclick="abrirCarrito()"
+    >
+
+        🛒 Carrito
+        <span id="cantidad-carrito">
+            0
+        </span>
+
+    </button>
+
+
+</header>
+
+
+<main>
+
+
+    <a
+        href="{{ url_for('tienda.inicio') }}"
+        class="volver"
+    >
+
+        ← Volver a la tienda
+
+    </a>
+
+
+    <section class="producto-detalle">
+
+
+        <!-- =================================
+             IMAGEN
+        ================================== -->
+
+        <div class="imagen-detalle">
+
+            <img
+                src="{{ producto.foto }}"
+                alt="{{ producto.modelo }}"
+            >
+
+        </div>
+
+
+        <!-- =================================
+             INFORMACIÓN
+        ================================== -->
+
+        <div class="informacion-detalle">
+
+
+            <h1>
+
+                {{ producto.modelo }}
+
+            </h1>
+
+
+            <div class="precio-detalle">
+
+                ${{ producto.precio }}
+
+            </div>
+
+
+            {% if producto.descripcion %}
+
+                <div class="titulo-info">
+
+                    Descripción
+
+                </div>
+
+
+                <div class="descripcion-detalle">
+
+                    {{ producto.descripcion }}
+
+                </div>
+
+            {% endif %}
+
+
+            {% if producto.tallas_disponibles %}
+
+
+                <div class="titulo-info">
+
+                    Talla disponible
+
+                </div>
+
+
+                <select
+                    id="talla-producto"
+                    class="selector-detalle"
+                >
+
+                    {% for talla in producto.tallas_disponibles %}
+
+                        <option value="{{ talla }}">
+
+                            Talla {{ talla }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <button
+                    class="boton-agregar"
+                    onclick="agregarAlCarrito(
+                        '{{ producto.modelo|e }}',
+                        '{{ producto.precio|e }}',
+                        'talla-producto'
+                    )"
+                >
+
+                    🛒 Agregar al carrito
+
+                </button>
+
+
+            {% else %}
+
+                <div class="agotado">
+
+                    Este producto está agotado.
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- =====================================
+     FONDO DEL CARRITO
+====================================== -->
+
+<div
+    id="fondo-carrito"
+    class="fondo-carrito"
+    onclick="cerrarCarrito()"
+></div>
+
+
+<!-- =====================================
+     PANEL DEL CARRITO
+====================================== -->
+
+<div
+    id="carrito-panel"
+    class="carrito-panel"
+>
+
+
+    <div class="cabecera-carrito">
+
+        <h2>
+
+            🛒 Tu carrito
+
+        </h2>
+
+
+        <button
+            class="cerrar-carrito"
+            onclick="cerrarCarrito()"
+        >
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <div id="contenido-carrito">
+
+        <div class="carrito-vacio">
+
+            Tu carrito está vacío.
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="total-carrito"
+        class="total-carrito"
+    >
+
+        Total: $0
+
+    </div>
+
+
+    <button
+        class="boton-whatsapp"
+        onclick="enviarPedido()"
+    >
+
+        📲 Comprar por WhatsApp
+
+    </button>
+
+
+</div>
+
+
+<script
+    src="{{ url_for('tienda.static', filename='tienda.js') }}"
+></script>
+
+
+</body>
+
+</html>
