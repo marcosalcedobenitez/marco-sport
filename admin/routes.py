@@ -27,7 +27,9 @@ from services.productos import (
 )
 
 
-DATABASE = "admin.db"
+from config.settings import ADMIN_DATABASE
+
+DATABASE = ADMIN_DATABASE
 
 
 admin = Blueprint(
